@@ -10,7 +10,7 @@
 
 ### File System Structure:
 - /app - the main project folder containing everything
-- /app/models - create and export new models here
+- /app/database/models - create and export new models here
 - /app/__init__.py - connect Flask blueprints here
 
 
