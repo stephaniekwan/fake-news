@@ -1,23 +1,24 @@
 import React from 'react';
-import logo from './logo.svg';
+import stonks from './logo-small.png';
 import './App.css';
+
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
+        <img src={stonks} className="App-logo" alt="logo" />
+        <h1>Fake News Detector</h1>
+        <div class="circle"></div>
+        <p class="body">
+          Fake News / Not Fake News
         </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <p>
+          We found this article to be fake news / not fake news...
+        </p>
+        <p>
+          Related Articles:
+        </p>
       </header>
     </div>
   );
