@@ -10,7 +10,7 @@ from firebase_admin import credentials, firestore
 # set up connection to cloud firestore DB in cloud
 cred = credentials.ApplicationDefault()
 firebase_admin.initialize_app(cred, {
-    'projectId': sdsc-fake-news,
+    'projectId': 'sdsc-fake-news',
 })
 
 db = firestore.client()

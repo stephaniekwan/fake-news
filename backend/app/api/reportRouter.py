@@ -8,6 +8,7 @@ report_blueprint = Blueprint('report_blueprint', __name__, url_prefix="/reports"
 @report_blueprint.route("/", methods=["GET"])
 def getAllReports():
     try:
+        return
         ## reports = reportService.getAllReports()
         ## return { "reports": reports, "error": None }
     except:
