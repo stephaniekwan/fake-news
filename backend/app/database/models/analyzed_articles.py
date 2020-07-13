@@ -20,6 +20,8 @@ from dataclasses import dataclass, field
 class Analyzed_Article(Model):
     url: str
     domain: str
+    title: str
     rating: float
+    risk_level: int
     timestamp: datetime
-    reports: Report
+    reports: Report[]
