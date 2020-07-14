@@ -6,6 +6,7 @@ import os
 # Create development app
 # To Do (Opt to change dev environments in .env file)
 application = create_app()
+manager = Manager(application)
 
 @manager.command
 def run():

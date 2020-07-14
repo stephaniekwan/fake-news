@@ -5,10 +5,10 @@ import firestore_model
 def get_all_articles():
     '''
     Gets all articles from the database
-    @return all Analyzed_Article instances 
+    @return all Analyzed_Article instances
     '''
     return Analyzed_Article.query().get()
-    
+
 def add_article(article):
     '''
     Adds a new article to the database if it doesn't already exist
@@ -19,13 +19,13 @@ def add_article(article):
     # if article doesn't already exist
     if len(existing) == 0:
         new_article = Analyzed_Article.make(
-            url = article['url']
-            domain = article['domain']
-            title = article['title']
-            rating = article['rating']
-            risk_level = article['risk_level']
-            timestamp = article['timestamp']
-            reports = []
+            url = article['url'],
+            domain = article['domain'],
+            title = article['title'],
+            rating = article['rating'],
+            risk_level = article['risk_level'],
+            timestamp = article['timestamp'],
+            reports = [],
             save=True
         )
         return new_article

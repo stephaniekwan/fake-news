@@ -18,4 +18,4 @@ class Analyzed_Article(Model):
     rating: float
     risk_level: int
     timestamp: datetime
-    reports: Report[]
+    reports: [] # To Do: figure out how to represent Report[] in Python
