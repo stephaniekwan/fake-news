@@ -1,5 +1,4 @@
 # from flask import make_response
-from config import db
 from ..database.models.analyzed_articles import Analyzed_Article
 import firestore_model
 from firebase_admin import firestore
@@ -64,5 +63,5 @@ def update_article(article_url, ):
     # make a new article
     else:
         add_article(article)
-    
+
     return

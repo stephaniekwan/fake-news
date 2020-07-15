@@ -1,7 +1,7 @@
 '''
 Model of Analyzed Articles database
 '''
-from config import db
+from .. import db
 from datetime import datetime
 from typing import List
 from .reports import Report

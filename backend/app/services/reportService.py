@@ -1,7 +1,7 @@
-from config import db
 from ..database.models.reports import Report
 import firestore_model
 from firebase_admin import firestore
+from ..database import db
 
 def getAllReports():
     '''
@@ -17,18 +17,24 @@ def postReport(report):
     '''
 
     # possible change/update - steph
-    reports = getReport(report['report_id'])
+    # reports = getReport(report['report_id'])
     #reports = getReport(report.report_id)
 
-    if len(reports) == 0:
-        new_report = Report.make(
-                report_id=report['report_id'],
-                url=report['url'],
-                tag=report['tag'],
-                comment=report['comment']
-                save=True
-        )
-    return 
+    # if len(reports) == 0:
+    #     new_report = Report.make(
+    #             report_id=report['report_id'],
+    #             url=report['url'],
+    #             tag=report['tag'],
+    #             comment=report['comment']
+    #             save=True
+    #     )
+    # return
+
+    # This works without model (Dennis)
+    # Question: do we need to use model or not?
+    # (To Do): set a proper way to insert the report
+    db.collection('reports').document('1').set(report)
+    return new_report
 
     '''Original Code
     reports = Report.query([

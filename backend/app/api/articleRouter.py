@@ -3,7 +3,7 @@ from flask import request, json, jsonify, Blueprint
 from ..services import articleService
 from ..error.responses import sendError
 
-article_blueprint = Blueprint('article_blueprint', __name__, 
+article_blueprint = Blueprint('article_blueprint', __name__,
                               url_prefix='/articles')
 
 @article_blueprint.route('/', methods=['GET'])
@@ -39,9 +39,9 @@ def get_article(article_url):
     except:
         return sendError(500, "An error occurred while retrieving article")
 
-
-@article_blueprint.route('/<article_url>', methods=['POST'])
-def update_article(article):
-    try:
-        
-    except:
+# Dennis (To do): propery implement this
+# Temporary comment this to fix syntax error.
+# @article_blueprint.route('/<article_url>', methods=['POST'])
+# def update_article(article):
+#     # try:
+#     # except:
