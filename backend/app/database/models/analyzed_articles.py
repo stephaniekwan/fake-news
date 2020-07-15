@@ -20,3 +20,5 @@ class Analyzed_Article(Model):
     risk_level: int
     timestamp: datetime
     reports: List[Report]
+
+# Analyzed_Article.save()

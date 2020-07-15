@@ -38,3 +38,10 @@ def get_article(article_url):
         return { "article": article, "error": None }
     except:
         return sendError(500, "An error occurred while retrieving article")
+
+
+@article_blueprint.route('/<article_url>', methods=['POST'])
+def update_article(article):
+    try:
+        
+    except:

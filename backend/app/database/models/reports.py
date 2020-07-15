@@ -10,7 +10,10 @@ from dataclasses import dataclass, field
 
 @dataclass
 class Report(Model):
-    report_id: str
+    #user_id: int
+    report_id: int
     url: str
     tag: str
-    comment: str    # limit it to a certain length?
+    comment: str    # limit it to a certain length? prob not possible
+
+# Report.save()
