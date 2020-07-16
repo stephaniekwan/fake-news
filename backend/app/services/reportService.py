@@ -3,12 +3,16 @@ import firestore_model
 from firebase_admin import firestore
 from ..database import db
 
+reports_ref = db.collection('reports')
+
 def getAllReports():
     '''
     Gets all reports from the database
     @return all Report instances
     '''
-    return db.collection_group('report')
+    reports = [doc.to_dict() for doc in reports_ref.stream()]
+    return reports
+
 
 def postReport(report):
     '''
@@ -33,7 +37,7 @@ def postReport(report):
     # This works without model (Dennis)
     # Question: do we need to use model or not?
     # (To Do): set a proper way to insert the report
-    db.collection('reports').document('9').set(report)
+    reports_ref.document('9').set(report)
     return
 
     '''Original Code

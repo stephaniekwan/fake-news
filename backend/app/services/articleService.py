@@ -4,28 +4,32 @@ import firestore_model
 from firebase_admin import firestore
 from ..database import db
 
+articles_ref =  db.collection('articles')
+
 def get_all_articles():
     '''
     Gets all articles from the database
     @return all Analyzed_Article instances
     '''
-    #return db.collection('articles').list_documents()
+    #return articles_ref.list_documents()
     #return db.collection_group('articles')
-    doc_ref = db.collection('articles').document('1')
+    # doc_ref = articles_ref.document('1')
 
     doc = doc_ref.get()
     if doc.exists:
         print(f'Document data: {doc.to_dict()}')
     else:
         print(u'No such document!')
+        return None
 
-    return doc.to_dict()
+    articles = [doc.to_dict() for doc in articles_ref.stream()]
+    return articles
 
 def add_article(article):
     '''
     Adds a new article to the database if it doesn't already exist
     @param article -- the article to be added
-    
+
     existing = get_article(article['url'])
 
     # if article doesn't already exist
@@ -45,23 +49,24 @@ def add_article(article):
     return
     #return existing
     '''
-    db.collection('articles').document('1').set(article)
+    articles_ref.document('1').set(article)
     return article
 
 def get_article(article_url):
+
     '''
     Gets a particular article from the database
     @param article -- the article to query for
     @return an Analyzed_Article instance if the article is in db, else error
     '''
-    doc_ref = db.collection('articles').document('1')
+    doc_ref = articles_ref.document('1')
     doc = doc_ref.get()
-    
+
     if doc.exists:
         print(f'Document data: {doc.to_dict()}')
     else:
         print(u'No such document!')
-        
+
     return doc.to_dict()
 
 def update_article(article_url):

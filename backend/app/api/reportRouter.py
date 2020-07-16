@@ -13,9 +13,9 @@ logging.basicConfig(level=logging.INFO)
 def getAllReports():
     try:
         print("Getting all reports...")
-        return
-        ## reports = reportService.getAllReports()
-        ## return { "reports": reports, "error": None }
+        reports = reportService.getAllReports()
+
+        return { "reports": reports, "error": None }
     except:
         logging.error("An error occurred while retrieving reports")
         return sendError(500, "An error occurred while retrieving reports")
