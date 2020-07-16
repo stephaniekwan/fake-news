@@ -33,8 +33,8 @@ def postReport(report):
     # This works without model (Dennis)
     # Question: do we need to use model or not?
     # (To Do): set a proper way to insert the report
-    db.collection('reports').document('1').set(report)
-    return new_report
+    db.collection('reports').document('9').set(report)
+    return
 
     '''Original Code
     reports = Report.query([

@@ -2,20 +2,30 @@
 from ..database.models.analyzed_articles import Analyzed_Article
 import firestore_model
 from firebase_admin import firestore
+from ..database import db
 
 def get_all_articles():
     '''
     Gets all articles from the database
     @return all Analyzed_Article instances
     '''
-    #return Analyzed_Article.query().get()
-    return db.collection_group('analyzed_article')
+    #return db.collection('articles').list_documents()
+    #return db.collection_group('articles')
+    doc_ref = db.collection('articles').document('1')
+
+    doc = doc_ref.get()
+    if doc.exists:
+        print(f'Document data: {doc.to_dict()}')
+    else:
+        print(u'No such document!')
+
+    return doc.to_dict()
 
 def add_article(article):
     '''
     Adds a new article to the database if it doesn't already exist
     @param article -- the article to be added
-    '''
+    
     existing = get_article(article['url'])
 
     # if article doesn't already exist
@@ -34,6 +44,9 @@ def add_article(article):
 
     return
     #return existing
+    '''
+    db.collection('articles').document('1').set(article)
+    return article
 
 def get_article(article_url):
     '''
@@ -41,13 +54,17 @@ def get_article(article_url):
     @param article -- the article to query for
     @return an Analyzed_Article instance if the article is in db, else error
     '''
-    query = Analyzed_Article.query([
-        ('url', article_url)
-      ]
-    ).get()
-    return query
+    doc_ref = db.collection('articles').document('1')
+    doc = doc_ref.get()
+    
+    if doc.exists:
+        print(f'Document data: {doc.to_dict()}')
+    else:
+        print(u'No such document!')
+        
+    return doc.to_dict()
 
-def update_article(article_url, ):
+def update_article(article_url):
     '''TODO: QUESTION-do we want to clear all reports for the article?
     TODO: QUESTION-should we just update the risk_level?
     For when user wants to reanalyze an article, thus giving it a
