@@ -41,7 +41,9 @@ def add_article():
         if new_article == "Article already exists in database!":
             logging.info("Article already exists in database!")
             #return { "article": get_article(article['url']), "error": None }
-            return get_article(article['url'])
+            # return get_article(article['url'])
+            return sendError(400, "Duplicate article")
+
         # Create the new article if no other errors
         logging.info("Article successfully added")
         return { "article": new_article, "error": None }
@@ -55,7 +57,7 @@ def get_article(article_url):
     try:
         logging.info("Getting a single article...")
         article = articleService.get_article(article_url)
-        if not article:
+        if article == 'No such document':
             logging.error("Article not found in database")
             return sendError(404, "Article not found in database")
         return { "article": article, "error": None }

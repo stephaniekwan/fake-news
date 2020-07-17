@@ -9,23 +9,19 @@ def get_all_articles():
     Gets all articles from the database
     @return all Analyzed_Article instances
     '''
-    #return articles_ref.list_documents()
-    #return db.collection_group('articles')
-    # doc_ref = articles_ref.document('1')
-
     articles = [doc.to_dict() for doc in articles_ref.stream()]
     return articles
 
 def add_article(article):
-    #articles_ref.document('1').set(article)
-    # TODO: (steph) add conditional so that we dont add an article twice
-        # probably use get_article when its done
+    '''
+    Add an article to the database if it doesn't already exist. 
+    If it already exists, do not overwrite (keep old data)
+    @return info that the article already exists; else return the article
+    '''
     existing = get_article(article['url'])
-    #print("existing: ", type(existing)) || dict
-    #print("article: ", type(article))   || dict
 
     # if it already exists, keep the old entry
-    if existing != None:
+    if existing != 'No such article':
         return "Article already exists in database!"
 
 
@@ -52,8 +48,7 @@ def get_article(article_url):
 
     # document referenced does not exist
     if not doc_ref:
-        print(u'No such document!')
-        return None
+        return 'No such article'
 
     # Get the data in the document by accessing it using its reference
     doc = doc_ref.reference.get()
