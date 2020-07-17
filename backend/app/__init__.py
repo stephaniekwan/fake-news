@@ -1,4 +1,3 @@
-# from app import routes
 from flask import Flask
 
 # Import all API blueprints from the __init__.py file

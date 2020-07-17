@@ -1,4 +1,5 @@
 from flask_script import Manager
+from livereload import Server
 
 from app import create_app
 import os
@@ -17,4 +18,5 @@ def run():
 
 
 if __name__ == "__main__":
-    manager.run()
+    server = Server(manager.run())
+    server.serve()
