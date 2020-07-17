@@ -52,6 +52,15 @@ def add_article(article):
     #articles_ref.document('1').set(article)
     # TODO: (steph) add conditional so that we dont add an article twice
         # probably use get_article when its done
+    existing = get_article(article['url'])
+    #print("existing: ", type(existing)) || dict
+    #print("article: ", type(article))   || dict
+
+    # if it already exists, keep the old entry
+    if existing != None:
+        return "Article already exists in database!"
+
+
     articles_ref.add(article)
     return article
 

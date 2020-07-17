@@ -21,7 +21,7 @@ def get_all_articles():
     return { "articles": articles, "error": None}
     '''
     try:
-        print("Getting all articles...")
+        logging.info("Getting all articles...")
         articles = articleService.get_all_articles()
         if not articles:
             logging.error("No articles found in database")
@@ -36,13 +36,21 @@ def get_all_articles():
 @article_blueprint.route('/', methods=['POST'])
 def add_article():
     try:
-        print("Adding article...")
+        logging.info("Adding article...")
         article = request.get_json()
-        print("article: \n", json.dumps(article))
+        # print("article: \n", json.dumps(article))
+        # No request provided
         if not article:
             logging.error("No request body provided")
             return sendError(400, "No request body provided")
+        
         new_article = articleService.add_article(article)
+        # Existing article found
+        if new_article == "Article already exists in database!":
+            logging.info("Article already exists in database!")
+            #return { "article": get_article(article['url']), "error": None }
+            return get_article(article['url'])
+        # Create the new article if no other errors
         logging.info("Article successfully added")
         return { "article": new_article, "error": None }
     except:
@@ -52,15 +60,8 @@ def add_article():
 
 @article_blueprint.route('/<article_url>', methods=['GET'])
 def get_article(article_url):
-    print("Getting single article...")
-    article = articleService.get_article(article_url)
-    if not article:
-        logging.error("Article not found in database")
-        return sendError(404, "Article not found in database")
-    return { "article": article, "error": None }
-    '''
     try:
-        print("Getting single article...")
+        logging.info("Getting a single article...")
         article = articleService.get_article(article_url)
         if not article:
             logging.error("Article not found in database")
@@ -69,7 +70,7 @@ def get_article(article_url):
     except:
         logging.error("Error retrieving article")
         return sendError(500, "Error retrieving article")
-    '''
+    
 
 # Dennis (To do): propery implement this
 # Temporary comment this to fix syntax error.
