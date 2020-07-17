@@ -13,13 +13,6 @@ def get_all_articles():
     #return db.collection_group('articles')
     # doc_ref = articles_ref.document('1')
 
-    doc = doc_ref.get()
-    if doc.exists:
-        print(f'Document data: {doc.to_dict()}')
-    else:
-        print(u'No such document!')
-        return None
-
     articles = [doc.to_dict() for doc in articles_ref.stream()]
     return articles
 
@@ -37,6 +30,8 @@ def add_article(article):
 
 
     articles_ref.add(article)
+
+    # Dennis(To do): when the article already exists in db, it should not return the actual article
     return article
 
 def get_article(article_url):

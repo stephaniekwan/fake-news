@@ -12,18 +12,10 @@ logging.basicConfig(level=logging.INFO)
 
 @article_blueprint.route('/', methods=['GET'])
 def get_all_articles():
-    '''debugging purposes
-    articles = articleService.get_all_articles()
-    if not articles:
-        logging.error("No articles found in database")
-        return sendError(404, "No articles found in database")
-    logging.info("All articles successfully retrieved")
-    return { "articles": articles, "error": None}
-    '''
     try:
         logging.info("Getting all articles...")
         articles = articleService.get_all_articles()
-        if not articles:
+        if not articles or len(articles) == 0:
             logging.error("No articles found in database")
             return sendError(404, "No articles found in database")
         logging.info("All articles successfully retrieved")
@@ -43,7 +35,7 @@ def add_article():
         if not article:
             logging.error("No request body provided")
             return sendError(400, "No request body provided")
-        
+
         new_article = articleService.add_article(article)
         # Existing article found
         if new_article == "Article already exists in database!":
@@ -56,7 +48,7 @@ def add_article():
     except:
         logging.error("Error adding an article to database")
         return sendError(500, "Error adding an article to database")
-    
+
 
 @article_blueprint.route('/<article_url>', methods=['GET'])
 def get_article(article_url):
@@ -70,7 +62,7 @@ def get_article(article_url):
     except:
         logging.error("Error retrieving article")
         return sendError(500, "Error retrieving article")
-    
+
 
 # Dennis (To do): propery implement this
 # Temporary comment this to fix syntax error.

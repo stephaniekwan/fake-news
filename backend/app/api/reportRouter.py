@@ -15,6 +15,11 @@ def getAllReports():
         print("Getting all reports...")
         reports = reportService.getAllReports()
 
+        if not reports or len(reports) == 0:
+            logging.error("No reports found in database")
+            return sendError(404, "No reports found in database")
+
+        logging.info("All Reports successfully retrieved")
         return { "reports": reports, "error": None }
     except:
         logging.error("An error occurred while retrieving reports")
