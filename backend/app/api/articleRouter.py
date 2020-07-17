@@ -52,6 +52,13 @@ def add_article():
 
 @article_blueprint.route('/<article_url>', methods=['GET'])
 def get_article(article_url):
+    print("Getting single article...")
+    article = articleService.get_article(article_url)
+    if not article:
+        logging.error("Article not found in database")
+        return sendError(404, "Article not found in database")
+    return { "article": article, "error": None }
+    '''
     try:
         print("Getting single article...")
         article = articleService.get_article(article_url)
@@ -62,6 +69,7 @@ def get_article(article_url):
     except:
         logging.error("Error retrieving article")
         return sendError(500, "Error retrieving article")
+    '''
 
 # Dennis (To do): propery implement this
 # Temporary comment this to fix syntax error.

@@ -49,7 +49,10 @@ def add_article(article):
     return
     #return existing
     '''
-    articles_ref.document('1').set(article)
+    #articles_ref.document('1').set(article)
+    # TODO: (steph) add conditional so that we dont add an article twice
+        # probably use get_article when its done
+    articles_ref.add(article)
     return article
 
 def get_article(article_url):
@@ -59,13 +62,24 @@ def get_article(article_url):
     @param article -- the article to query for
     @return an Analyzed_Article instance if the article is in db, else error
     '''
-    doc_ref = articles_ref.document('1')
-    doc = doc_ref.get()
+    
+    # Get a single article from database that matches the article_url
+    doc_ref_gen = articles_ref.where(u'url', u'==', article_url).limit(1).stream()
+    #print("before", type(doc_ref))
+    
+    #Get the document snapshot of the doc_ref_gen generator
+    doc_ref = next(doc_ref_gen, None)
+    #print("after", type(doc_ref))
 
-    if doc.exists:
-        print(f'Document data: {doc.to_dict()}')
-    else:
+    # document referenced does not exist
+    if not doc_ref:
         print(u'No such document!')
+        return None
+    
+    # Get the data in the document by accessing it using its reference
+    doc = doc_ref.reference.get()
+    
+    print(f'Document data: {doc.to_dict()}')
 
     return doc.to_dict()
 
