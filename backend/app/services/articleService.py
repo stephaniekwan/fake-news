@@ -1,5 +1,3 @@
-# from flask import make_response
-from ..database.models.analyzed_articles import Analyzed_Article
 import firestore_model
 from firebase_admin import firestore
 from ..database import db
@@ -26,29 +24,6 @@ def get_all_articles():
     return articles
 
 def add_article(article):
-    '''
-    Adds a new article to the database if it doesn't already exist
-    @param article -- the article to be added
-
-    existing = get_article(article['url'])
-
-    # if article doesn't already exist
-    if len(existing) == 0:
-        new_article = Analyzed_Article.make(
-            url = article['url'],
-            domain = article['domain'],
-            title = article['title'],
-            rating = article['rating'],
-            risk_level = article['risk_level'],
-            timestamp = article['timestamp'],
-            reports = [],
-            save=True
-        )
-        #return new_article
-
-    return
-    #return existing
-    '''
     #articles_ref.document('1').set(article)
     # TODO: (steph) add conditional so that we dont add an article twice
         # probably use get_article when its done
@@ -71,11 +46,11 @@ def get_article(article_url):
     @param article -- the article to query for
     @return an Analyzed_Article instance if the article is in db, else error
     '''
-    
+
     # Get a single article from database that matches the article_url
     doc_ref_gen = articles_ref.where(u'url', u'==', article_url).limit(1).stream()
     #print("before", type(doc_ref))
-    
+
     #Get the document snapshot of the doc_ref_gen generator
     doc_ref = next(doc_ref_gen, None)
     #print("after", type(doc_ref))
@@ -84,10 +59,10 @@ def get_article(article_url):
     if not doc_ref:
         print(u'No such document!')
         return None
-    
+
     # Get the data in the document by accessing it using its reference
     doc = doc_ref.reference.get()
-    
+
     print(f'Document data: {doc.to_dict()}')
 
     return doc.to_dict()
