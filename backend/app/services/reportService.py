@@ -63,6 +63,7 @@ def get_report_by_user_id(user_id):
 
 
     # Get a single report that matches the user_id
+    # To do(Dennis): need to observed how this code will behave after implementing the ideal way to store user_id
     doc_ref_gen = reports_ref.where(u'user_id', u'==', user_id).limit(100).stream()
 
     # Get the document snapshot of the doc_ref_gen generator
