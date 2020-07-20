@@ -19,8 +19,6 @@ def add_report(report):
     Adds a new report to the database if it doesn't already exist
     @param report -- the report to be added
     '''
-    # This works without model (Dennis)
-    # Question: do we need to use model or not?
 
     # TODO: (steph) what else to check for equivalence before deciding it is a duplicate?
         # check if comment is the same?
@@ -55,17 +53,17 @@ def add_report(report):
 
     return report
 
-def get_report(report_id):
+def get_report_by_user_id(user_id):
     '''
-    Finds the single report that matches the report_id
-    @param report_id -- the reportID to search for
+    Finds the single report that matches the user_id
+    @param user_id -- the reportID to search for
     '''
-    # TODO: (steph) allow this method to also check if report_id matches the unique id?
+    # TODO: (steph) allow this method to also check if user_id matches the unique id?
         # either way, need a better way to look for a report than user_id field
 
 
-    # Get a single report that matches the report_id
-    doc_ref_gen = reports_ref.where(u'user_id', u'==', report_id).limit(1).stream()
+    # Get a single report that matches the user_id
+    doc_ref_gen = reports_ref.where(u'user_id', u'==', user_id).limit(1).stream()
 
     # Get the document snapshot of the doc_ref_gen generator
     doc_ref = next(doc_ref_gen, None)
@@ -80,3 +78,16 @@ def get_report(report_id):
     print(f'Document data: {doc.to_dict()}')
 
     return doc.to_dict()
+
+def get_report_by_report_id(report_id):
+    '''
+    Finds the single report that matches the report_id
+    @param report_id -- the reportID to search for
+    '''
+
+    # Get a single report that matches the report_id
+    doc_ref = reports_ref.document(report_id).get()
+
+    print(f'Document data: {doc_ref.to_dict()}')
+
+    return doc_ref.to_dict()

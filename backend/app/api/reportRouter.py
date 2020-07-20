@@ -28,7 +28,7 @@ def get_all_reports():
 
 @report_blueprint.route("/", methods=["POST"])
 def add_report():
-    
+
     try:
         print("Creating report...")
         report = request.get_json()
@@ -56,11 +56,28 @@ def add_report():
         logging.error("Error creating new report")
         return sendError(500, "Error creating new report")
 
-@report_blueprint.route("/<report_id>", methods=["GET"])
-def get_report(report_id):
+@report_blueprint.route("/<user_id>/user", methods=["GET"])
+def get_report_by_user_id(user_id):
     try:
         print("Getting single report...")
-        report = reportService.get_report(report_id)
+        report = reportService.get_report_by_user_id(user_id)
+
+        # Report not in database
+        if report == 'No such document':
+            logging.error("Report not found in database")
+            return sendError(404, "Report not found in database")
+
+        logging.info("Report found")
+        return { "report": report, "error": None }
+    except:
+        logging.error("An error occurred while retrieving report")
+        return sendError(500, "An error occurred while retrieving report")
+
+@report_blueprint.route("/<report_id>/report", methods=["GET"])
+def get_report_by_report_id(report_id):
+    try:
+        print("Getting single report...")
+        report = reportService.get_report_by_report_id(report_id)
 
         # Report not in database
         if report == 'No such document':

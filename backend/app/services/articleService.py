@@ -14,7 +14,7 @@ def get_all_articles():
 
 def add_article(article):
     '''
-    Add an article to the database if it doesn't already exist. 
+    Add an article to the database if it doesn't already exist.
     If it already exists, do not overwrite (keep old data)
     @return info that the article already exists; else return the article
     '''
@@ -27,7 +27,6 @@ def add_article(article):
 
     articles_ref.add(article)
 
-    # Dennis(To do): when the article already exists in db, it should not return the actual article
     return article
 
 def get_article(article_url):
