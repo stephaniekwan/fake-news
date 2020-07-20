@@ -66,11 +66,11 @@ def update_article(article_url):
 
     # if article already exists, delete it
     if len(existing) != 0:
-        existing.set({ 'risk_level': article['risk_level'] })
+        existing.set({ 'risk_level': article_url['risk_level'] })
         #existing.set({ 'risk_level': article.risk_level })
 
     # make a new article
     else:
-        add_article(article)
+        add_article(article_url)
 
     return
