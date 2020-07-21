@@ -65,10 +65,25 @@ def get_article(article_url):
         logging.error("Error retrieving article")
         return sendError(500, "Error retrieving article")
 
+# To do (dennis): We need to update this method after figuring out fields that need to be updated.
+@article_blueprint.route("/<article_url>", methods=["POST"])
+def update_article(article_url):
+    try:
+        logging.info("Getting request body...")
+        article = request.get_json()
 
-# Dennis (To do): propery implement this
-# Temporary comment this to fix syntax error.
-# @article_blueprint.route('/<article_url>', methods=['POST'])
-# def update_article(article):
-#     # try:
-#     # except:
+        if not article:
+            logging.error("No request body provided")
+            return sendError(400, "No request body provided")
+
+        logging.info("Updating a single article...")
+        article = articleService.update_article(article_url, article)
+
+        if article == 'No such document':
+            logging.error("Article not found in database")
+            return sendError(404, "Article not found in database")
+
+        return { "article": article, "error": None }
+    except:
+        logging.error("Error Updating article")
+        return sendError(500, "Error Updating article")

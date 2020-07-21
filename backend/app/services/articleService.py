@@ -56,7 +56,7 @@ def get_article(article_url):
 
     return doc.to_dict()
 
-def update_article(article_url):
+def update_article(article_url, article):
     '''TODO: QUESTION-do we want to clear all reports for the article?
     TODO: QUESTION-should we just update the risk_level?
     For when user wants to reanalyze an article, thus giving it a
@@ -65,12 +65,9 @@ def update_article(article_url):
     existing = get_article(article_url)
 
     # if article already exists, delete it
-    if len(existing) != 0:
-        existing.set({ 'risk_level': article_url['risk_level'] })
-        #existing.set({ 'risk_level': article.risk_level })
+    # if len(existing) != 0 and article['risk_level']:
+    # existing.set({ 'risk_level': article['risk_level'] })
 
-    # make a new article
-    else:
-        add_article(article_url)
+    # To do (dennis): We need to update this method after figuring out fields that need to be updated.
 
-    return
+    return existing
