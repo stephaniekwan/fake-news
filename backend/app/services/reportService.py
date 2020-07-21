@@ -7,10 +7,29 @@ reports_ref = db.collection('reports')
 
 def get_all_reports():
     '''
-    Gets all reports from the database
-    @return all Report instances
+    Gets all reports from the database with their unique report id
+    @return dictionary form of all Report instances with a new report_id field
     '''
-    reports = [doc.to_dict() for doc in reports_ref.stream()]
+    reports = []
+
+    # for each report in the db
+    for doc in reports_ref.stream():
+        # get the report in dict form
+        report = doc.to_dict()
+
+        # get the unique report id
+        doc_ref_gen = reports_ref.where(
+            u'url', u'==', report['url']).where(
+                u'user_id', u'==', report['user_id']).where(
+                    u'tag', u'==', report['tag']).where(
+                        u'comment', u'==', report['comment']).limit(1).stream()
+        doc_ref = next(doc_ref_gen, None)
+        report_ref = doc_ref.reference.id
+
+        # add report id to the dictionary, add report to list
+        report['report_id'] = report_ref
+        reports.append(report)
+
     return reports
 
 
