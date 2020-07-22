@@ -13,9 +13,14 @@ function App() {
         <p class="body">
           Fake News / Not Fake News
         </p>
-        <p>
-          We found this article to be fake news / not fake news...
+        <p class="body">
+          Our analysis finds this article to be about XX% factually accurate. You are at low risk of being exposed to false information.
         </p>
+        <p class="body">
+          Disagree with your results?
+        </p>
+        <button class="button">Renanalyze Article</button>
+        <button class="button">Make a Report</button>
         <p>
           Related Articles:
         </p>
