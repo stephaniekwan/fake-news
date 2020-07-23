@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
+import axios from 'axios';
 import stonks from './logo-small.png';
 import './App.css';
 
 
 function App() {
+  const [articles, setArticles] = useState(0);
+  useEffect(() => {
+    axios.get('/articles').then(response => {
+      setArticles(response.data.articles);
+    });
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -27,6 +35,7 @@ function App() {
           rel="noopener noreferrer"
         >
           Related Article #1
+  <p>{ articles[0] ? articles[0].domain : null}</p>
         </a>
         <a
           href="https://google.com"
@@ -35,6 +44,7 @@ function App() {
         >
           Related Article #2
         </a>
+        <p>{ articles[2] ? articles[2].domain : null}</p>
         <a
           href="https://google.com"
           target="_blank"
