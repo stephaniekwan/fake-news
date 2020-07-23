@@ -1,6 +1,6 @@
 import React from 'react';
-import stonks from './logo-small.png';
-import './App.css';
+import stonks from '../assets/logo-small.png';
+import '../styles/App.css';
 
 
 function App() {
