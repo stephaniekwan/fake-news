@@ -39,6 +39,7 @@ function Results() {
           rel="noopener noreferrer"
         >
           Related Article #1
+  <p>{ articles[0] ? articles[0].domain : null}</p>
         </a>
         <p>{ articles[0] ? articles[0].domain : null}</p>
         <a
@@ -48,8 +49,7 @@ function Results() {
         >
           Related Article #2
         </a>
-        <p>{ articles[0] ? articles[0].domain : null}</p>
-
+        <p>{ articles[2] ? articles[2].domain : null}</p>
         <a
           href="https://google.com"
           target="_blank"
