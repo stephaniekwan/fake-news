@@ -24,7 +24,7 @@ def get_delay():
     user_input = {'query':query}
     pred = pipeline.predict(query)
     print(pred)
-    dic = {1:'real',0:'fake'}
+    dic = {0:'real',1:'fake'}
     return f'<html><body><h1>{dic[pred[0]]}</h1> <form action="/"> <button type="submit">back </button> </form></body></html>'
 
 
