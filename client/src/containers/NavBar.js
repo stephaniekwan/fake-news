@@ -7,7 +7,7 @@ function NavBar() {
     const [key, setKey] = React.useState('App');
 
     return (
-        <Tabs id="NavNar" activeKey={key} onSelect={(k) => setKey(k)}>
+        <Tabs id="NavNar" activeKey={key} onSelect={(k) => setKey(k)} justify>
             <Tab eventKey="app" title="Main">
                 <App />
             </Tab>
