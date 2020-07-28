@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 // import setKey from '../containers/NavBar'
 
 import '../styles/Report.css'
+import styled from 'styled-components';
 import request from '../utils/request'
 
 function Report(props) {
@@ -21,8 +22,8 @@ function Report(props) {
         } else {
             setModal("submit");
             event.preventDefault();  // prob shouldnt be preventing default tho
-            
-            const options = 
+
+            const options =
                 {body: {
                     url: 'test',
                     userID: 'steph',
@@ -46,7 +47,7 @@ function Report(props) {
     // const handleReturn = () => setKey("app")
 
     return (
-        <div className='ReportForm'>
+        <ReportForm>
             <h1>Report an error</h1>
             <h3>Disagree with your results? Let us know what you think!</h3>
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -119,9 +120,13 @@ function Report(props) {
                 </Modal.Footer>
             </Modal>
 
-        </div>
+        </ReportForm>
     )
 
 }
 
 export default Report;
+
+const ReportForm = styled.div`
+    text-align: left;
+`
