@@ -80,16 +80,16 @@ function Report(props) {
 
                 <Form.Group controlId="reportForm.Comment">
                     <Form.Label>Feedback</Form.Label>
-                    <Form.Control as="textarea" rows="3" placeholder="Enter any comments here" /> 
+                    <Form.Control as="textarea" rows="3" placeholder="Enter any comments here" />
                 </Form.Group>
 
                 <div style={{display:'flex', justifyContent:'space-evenly'}}>
-                    <Button style={{ backgroundColor: "blue" }} variant="dark" type="submit" 
+                    <Button style={{ backgroundColor: "blue" }} variant="dark" type="submit"
                             onClick = {e => setModal("submit")} active>
                         Submit Report
                     </Button>
                 </div>
-            </Form> 
+            </Form>
 
             <Modal show={modal === 'submit'} onHide={handleClose} centered>
                 <Modal.Header closeButton>

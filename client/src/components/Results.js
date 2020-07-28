@@ -1,9 +1,18 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+import stonks from '../assets/logo-small.png';
 import { Link } from 'react-router-dom'
+import axios from 'axios';
 import '../styles/Results.css';
 
 
 function Results() {
+  const [articles, setArticles] = useState(0);
+  useEffect(() => {
+    axios.get('/articles').then(response => {
+      setArticles(response.data.articles);
+    });
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -30,6 +39,7 @@ function Results() {
         >
           Related Article #1
         </a>
+        <p>{ articles[0] ? articles[0].domain : null}</p>
         <a
           href="https://google.com"
           target="_blank"
@@ -37,6 +47,8 @@ function Results() {
         >
           Related Article #2
         </a>
+        <p>{ articles[0] ? articles[0].domain : null}</p>
+
         <a
           href="https://google.com"
           target="_blank"
