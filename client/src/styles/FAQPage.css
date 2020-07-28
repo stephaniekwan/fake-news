@@ -1,0 +1,11 @@
+.Collapsible__trigger {
+    display: block;
+    background-color: #7797c9;
+    color: white;
+    position: relative;
+    padding: 10px;
+}
+
+.Collapsible__contentInner {
+    padding: 10px;
+}

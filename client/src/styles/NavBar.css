@@ -1,0 +1,29 @@
+.Title {
+    color: white;
+    font-family: 'Times New Roman';
+    font-size: 50px;
+    text-align: center;
+    padding-left: 7%;
+}
+
+.Info {
+    height: 50px;
+    width: 50px;
+}
+
+.centered {
+    width: 100%;
+    
+}
+
+.right {
+    float: right;
+    padding: 10px;
+}
+
+.navbar {
+    background-color: #1F4681;
+    height: 100px;
+    display: flex;
+    align-items: center;
+}

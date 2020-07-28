@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Modal } from 'react-bootstrap'
 //import { Link, userHistory } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 // import setKey from '../containers/NavBar'
 
 import '../styles/Report.css'
+import request from '../utils/request'
 
 function Report(props) {
-    const [validated, setValidated] = React.useState(false);
-    const [modal, setModal] = React.useState(false);
+    const [validated, setValidated] = useState(false);
+    const [modal, setModal] = useState(false);
+
 
     const handleSubmit = event => {
         const form = event.currentTarget;
@@ -19,6 +21,19 @@ function Report(props) {
         } else {
             setModal("submit");
             event.preventDefault();  // prob shouldnt be preventing default tho
+            
+            const options = 
+                {body: {
+                    url: 'test',
+                    userID: 'steph',
+                    tag: 'what is happening',
+                    comment: 'ok'
+                }, method: 'POST'
+            }
+
+            request('/report', options).then(res => {
+                setModal('submit');
+            })
         }
         setValidated(true);
 
@@ -31,7 +46,7 @@ function Report(props) {
     // const handleReturn = () => setKey("app")
 
     return (
-        <div>
+        <div className='ReportForm'>
             <h1>Report an error</h1>
             <h3>Disagree with your results? Let us know what you think!</h3>
             <Form noValidate validated={validated} onSubmit={handleSubmit}>

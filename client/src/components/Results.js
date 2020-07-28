@@ -1,13 +1,13 @@
 import React from 'react';
-import stonks from '../assets/logo-small.png';
-import '../styles/App.css';
+import { Link } from 'react-router-dom'
+import '../styles/Results.css';
 
 
-function App() {
+function Results() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={stonks} className="App-logo" alt="logo" />
+        <img src='./assets/logo-small.png' className="App-logo" alt="logo" />
         <h1>Fake News Detector</h1>
         <div class="circle"></div>
         <p class="body">
@@ -17,7 +17,9 @@ function App() {
           Disagree with your results?
         </p>
         <button class="button">Renanalyze Article</button>
-        <button class="button">Make a Report</button>
+        <Link to='/report'>
+          <button class="button">Make a Report</button>
+        </Link>
         <p>
           Related Low Risk Articles:
         </p>
@@ -47,4 +49,4 @@ function App() {
   );
 }
 
-export default App;
+export default Results;

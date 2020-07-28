@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './styles/index.css';
-import NavBar from './containers/NavBar'
+import Router from './containers/Router'
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <NavBar />
+    <Router />
   </React.StrictMode>,
   document.getElementById('root')
 );

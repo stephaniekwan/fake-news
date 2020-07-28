@@ -1,0 +1,28 @@
+.App {
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-family: 'Georgia';
+}
+
+.analyzeButton {
+    background-color: white;
+    border: 2px solid #90D4D9;
+    border-radius: 8px;
+    border-width: medium;
+    padding: 20px 40px;
+    font-size: 40px;
+    font-family: 'Times','Wingdings 3';
+    text-align: center;
+    transition-duration: 0.4s;
+}
+
+.analyzeButton:hover {
+    background-color: #90D4D9;
+}
+
+.analyzeButton:active {
+    background-color: #90D4D9;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}
