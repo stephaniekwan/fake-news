@@ -11,9 +11,9 @@
   },
 
   "icons": {
-    "16": "logo-small.png",
-    "48": "logo-small.png",
-    "128": "logo-small.png"
+    "16": "assets/logo-small.png",
+    "48": "assets/logo-small.png",
+    "128": "assets/logo-small.png"
   },
 
   "browser_action": {
