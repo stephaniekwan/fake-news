@@ -52,3 +52,13 @@ function PromptPage() {
 
 
 export default PromptPage;
+/*
+    i have no idea where this goes tbh im just typing shit out
+    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+        let url = tabs[0].url;
+    
+    
+});
+can also set currentwindow to true
+
+*/

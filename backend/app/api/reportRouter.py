@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 @report_blueprint.route("/", methods=["GET"])
 def get_all_reports():
     try:
-        print("Getting all reports...")
+        logging.info("Getting all reports...")
         reports = reportService.get_all_reports()
 
         # Empty report database
@@ -28,11 +28,10 @@ def get_all_reports():
 
 @report_blueprint.route("/", methods=["POST"])
 def add_report():
-
     try:
-        print("Creating report...")
+        logging.info("Creating report...")
         report = request.get_json()
-        print("report: \n", json.dumps(report))
+        logging.info("report: \n" + json.dumps(report))
         # no request provided
         if not report:
             logging.error("No request body provided")
@@ -59,7 +58,7 @@ def add_report():
 @report_blueprint.route("/<user_id>/user", methods=["GET"])
 def get_report_by_user_id(user_id):
     try:
-        print("Getting single report...")
+        logging.info("Getting single report...")
         report = reportService.get_report_by_user_id(user_id)
 
         # Report not in database
@@ -76,7 +75,7 @@ def get_report_by_user_id(user_id):
 @report_blueprint.route("/<report_id>/report", methods=["GET"])
 def get_report_by_report_id(report_id):
     try:
-        print("Getting single report...")
+        logging.info("Getting single report...")
         report = reportService.get_report_by_report_id(report_id)
 
         # Report not in database

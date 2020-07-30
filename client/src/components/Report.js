@@ -1,47 +1,66 @@
-import React, { useState } from 'react';
-import { Form, Button, Modal } from 'react-bootstrap'
+// eslint-disable-next-line
+import React, { useState, useEffect, useRef } from 'react';
+import { Form, Button, Modal } from 'react-bootstrap';
 //import { Link, userHistory } from 'react-router-dom'
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css'
-// import setKey from '../containers/NavBar'
 
 import '../styles/Report.css'
 import styled from 'styled-components';
-import request from '../utils/request'
 
 function Report(props) {
     const [validated, setValidated] = useState(false);
-    const [modal, setModal] = useState(false);
+    const [modal, setModal] = useState('hide');
+    // eslint-disable-next-line
+    const [report, setReport] = useState(null);
+    // eslint-disable-next-line
+    const [requestBody, setRequestBody] = useState({
+        /*
+        url: '',
+        user_id: '',
+        tag: '',
+        comment: ''
+        */
+       
+    });
 
+    // used to save user input from the form
+    const [urlInput, setURL] = useState("");
+    const [userIDInput, setUserID] = useState("");
+    const [tagInput, setTag] = useState("");
+    const [commentInput, setComment] = useState("");
+    
+    useEffect(() => {
+        if (modal === 'submitted') {
+            setModal('done')
+            axios.post('/reports', {
+                url: urlInput.value,
+                user_id: userIDInput.value,
+                tag: tagInput.value,
+                comment: commentInput.value
+            }).then(res => {
+                setReport(res.data);
+            })
+        }
+        setModal('done');
+            
+    }, [modal, urlInput.value, userIDInput.value, tagInput.value, commentInput.value]);
 
     const handleSubmit = event => {
         const form = event.currentTarget;
         if(form.checkValidity() === false) {
             setModal("failure")
-            event.preventDefault();
+            //event.preventDefault();
             //event.stopPropagation();
         } else {
-            setModal("submit");
-            event.preventDefault();  // prob shouldnt be preventing default tho
-
-            const options =
-                {body: {
-                    url: 'test',
-                    userID: 'steph',
-                    tag: 'what is happening',
-                    comment: 'ok'
-                }, method: 'POST'
-            }
-
-            request('/report', options).then(res => {
-                setModal('submit');
-            })
+            setModal("submitted");
         }
+        event.preventDefault();
         setValidated(true);
 
-        // make request to backend probably but how tf
     }
 
-    const handleClose = () => setModal(false)
+    const handleClose = () => setModal(false);
 
     // TODO: after submitting report, automatically return to results
     // const handleReturn = () => setKey("app")
@@ -54,7 +73,11 @@ function Report(props) {
 
                 <Form.Group controlId="reportForm.Url">
                     <Form.Label>URL of Article</Form.Label>
-                    <Form.Control required as="textarea" rows="1"/>
+                    <Form.Control 
+                        type="text"
+                        ref={elem => setURL(elem)}
+                        required as="textarea" 
+                        rows="1"/>
                     <Form.Control.Feedback type="invalid">
                         Please provide a url.
                     </Form.Control.Feedback>
@@ -62,7 +85,10 @@ function Report(props) {
 
                 <Form.Group controlId="reportForm.UserID">
                 <Form.Label>User ID</Form.Label>
-                    <Form.Control required as="textarea" rows="1"/>
+                    <Form.Control 
+                        ref={elem => setUserID(elem)}
+                        required as="textarea" 
+                        rows="1"/>
                     <Form.Control.Feedback type="invalid">
                         Please provide a userID.
                     </Form.Control.Feedback>
@@ -70,7 +96,9 @@ function Report(props) {
 
                 <Form.Group controlId="reportForm.Tag">
                     <Form.Label>Select which of the following applies:</Form.Label>
-                    <Form.Control required as="select">
+                    <Form.Control 
+                      ref={elem => setTag(elem)}
+                      required as="select">
                         <option>I think this article is actually mostly true</option>
                         <option>I think this article is actually mostly false</option>
                     </Form.Control>
@@ -81,7 +109,11 @@ function Report(props) {
 
                 <Form.Group controlId="reportForm.Comment">
                     <Form.Label>Feedback</Form.Label>
-                    <Form.Control as="textarea" rows="3" placeholder="Enter any comments here" />
+                    <Form.Control
+                        ref={elem => setComment(elem)} 
+                        as="textarea" 
+                        rows="3" 
+                        placeholder="Enter any comments here" />
                 </Form.Group>
 
                 <div style={{display:'flex', justifyContent:'space-evenly'}}>
@@ -92,7 +124,7 @@ function Report(props) {
                 </div>
             </Form>
 
-            <Modal show={modal === 'submit'} onHide={handleClose} centered>
+            <Modal show={modal === 'submitted'} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Submitted Successfully!</Modal.Title>
                 </Modal.Header>
