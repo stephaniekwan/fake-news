@@ -21,7 +21,7 @@ function Report(props) {
         tag: '',
         comment: ''
         */
-       
+
     });
 
     // used to save user input from the form
@@ -29,7 +29,7 @@ function Report(props) {
     const [userIDInput, setUserID] = useState("");
     const [tagInput, setTag] = useState("");
     const [commentInput, setComment] = useState("");
-    
+
     useEffect(() => {
         if (modal === 'submitted') {
             setModal('done')
@@ -43,7 +43,7 @@ function Report(props) {
             })
         }
         setModal('done');
-            
+
     }, [modal, urlInput.value, userIDInput.value, tagInput.value, commentInput.value]);
 
     const handleSubmit = event => {
@@ -73,30 +73,21 @@ function Report(props) {
 
                 <Form.Group controlId="reportForm.Url">
                     <Form.Label>URL of Article</Form.Label>
-                    <Form.Control 
+                    <Form.Control
                         type="text"
                         ref={elem => setURL(elem)}
-                        required as="textarea" 
+                        required as="textarea"
                         rows="1"/>
                     <Form.Control.Feedback type="invalid">
                         Please provide a url.
                     </Form.Control.Feedback>
                 </Form.Group>
-
-                <Form.Group controlId="reportForm.UserID">
-                <Form.Label>User ID</Form.Label>
-                    <Form.Control 
-                        ref={elem => setUserID(elem)}
-                        required as="textarea" 
-                        rows="1"/>
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a userID.
-                    </Form.Control.Feedback>
-                </Form.Group>
-
+                {
+                    // To do(Dennis): submit the user id by retrieving the user id from local storage without the user knowledge
+                }
                 <Form.Group controlId="reportForm.Tag">
                     <Form.Label>Select which of the following applies:</Form.Label>
-                    <Form.Control 
+                    <Form.Control
                       ref={elem => setTag(elem)}
                       required as="select">
                         <option>I think this article is actually mostly true</option>
@@ -110,9 +101,9 @@ function Report(props) {
                 <Form.Group controlId="reportForm.Comment">
                     <Form.Label>Feedback</Form.Label>
                     <Form.Control
-                        ref={elem => setComment(elem)} 
-                        as="textarea" 
-                        rows="3" 
+                        ref={elem => setComment(elem)}
+                        as="textarea"
+                        rows="3"
                         placeholder="Enter any comments here" />
                 </Form.Group>
 
