@@ -35,7 +35,7 @@ function PromptPage() {
     useEffect(() => {
         const user_id = window.localStorage.getItem("user_id");
         if (typeof window !== "undefined" && user_id) {
-            axios(`reports/2/user`).then((response) => {
+            axios(`reports/${user_id}/user`).then((response) => {
                 console.log(response);
                 setReports(response.data.report);
             });
