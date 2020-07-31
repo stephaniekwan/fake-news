@@ -14,6 +14,7 @@ export default () => {
 
     const height = "100px";
 
+    // To do(Dennis): Investigate if we need to do somethings if users are in logged-in state
     useEffect(() => {
         setLoggedIn({
             isLoggedIn:
@@ -27,6 +28,7 @@ export default () => {
         ) {
             localStorage.setItem('user_id', uuidv4());
         }
+
     }, []);
 
     return (

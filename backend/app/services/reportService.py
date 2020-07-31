@@ -74,30 +74,22 @@ def add_report(report):
 
 def get_report_by_user_id(user_id):
     '''
-    Finds the single report that matches the user_id
+    Finds the multiple reports that matches the user_id
     @param user_id -- the reportID to search for
     '''
-    # TODO: (steph) allow this method to also check if user_id matches the unique id?
-        # either way, need a better way to look for a report than user_id field
 
-
-    # Get a single report that matches the user_id
-    # To do(Dennis): need to observed how this code will behave after implementing the ideal way to store user_id
-    doc_ref_gen = reports_ref.where(u'user_id', u'==', user_id).limit(100).stream()
-
-    # Get the document snapshot of the doc_ref_gen generator
-    doc_ref = next(doc_ref_gen, None)
+    # Get a multiple report that matches the user_id
+    docs = reports_ref.where(u'user_id', u'==', user_id).stream()
 
     # document referenced does not exist
-    if not doc_ref:
-        return 'No such report'
+    if not docs:
+        return 'No such reports'
 
-    # Get the data in the document by accessing it using its reference
-    doc = doc_ref.reference.get()
+    reports = []
+    for doc in docs:
+        reports.append(doc.to_dict())
 
-    print(f'Document data: {doc.to_dict()}')
-
-    return doc.to_dict()
+    return reports
 
 def get_report_by_report_id(report_id):
     '''

@@ -58,7 +58,7 @@ def add_report():
 @report_blueprint.route("/<user_id>/user", methods=["GET"])
 def get_report_by_user_id(user_id):
     try:
-        logging.info("Getting single report...")
+        logging.info("Getting mutiple reports...")
         report = reportService.get_report_by_user_id(user_id)
 
         # Report not in database
@@ -69,8 +69,8 @@ def get_report_by_user_id(user_id):
         logging.info("Report found")
         return { "report": report, "error": None }
     except:
-        logging.error("An error occurred while retrieving report")
-        return sendError(500, "An error occurred while retrieving report")
+        logging.error("An error occurred while retrieving reports")
+        return sendError(500, "An error occurred while retrieving reports")
 
 @report_blueprint.route("/<report_id>/report", methods=["GET"])
 def get_report_by_report_id(report_id):
