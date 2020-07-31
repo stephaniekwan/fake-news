@@ -6,13 +6,15 @@ import '../styles/PromptPage.css';
 // neutral screen, button for user to decide if they want to analyze article
 
 function PromptPage() {
+    // eslint-disable-next-line
     const [url, setURL] = useState('');
     const [modal, setModal] = useState(false);
 
 
     // function to handle getting url; placeholder til we can send to backend
     const handleClick = event => {
-        setURL(window.location.href);
+        //setURL(window.location.toString());
+        //console.log(window.getCurrentUrl());
         setModal('show');
     }
 
@@ -26,7 +28,7 @@ function PromptPage() {
                 Want to know what percentage of your content is likely to be false?
             </h4>
             <div className='vertical'>
-                <Link to='/results'>
+                <Link to='/processing'>
                     <button className='analyzeButton'>Analyze Article</button>
                 </Link>
                 <button className='analyzeButton' onClick={handleClick}>Get URL</button>
@@ -53,12 +55,12 @@ function PromptPage() {
 
 export default PromptPage;
 /*
-    i have no idea where this goes tbh im just typing shit out
+    
     chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
         let url = tabs[0].url;
     
     
 });
-can also set currentwindow to true
+
 
 */

@@ -24,7 +24,9 @@ function Results() {
         <p class="body">
           Disagree with your results?
         </p>
-        <button class="button">Renanalyze Article</button>
+        <Link to='/processing'>
+          <button class="button">Renanalyze Article</button>
+        </Link>
         <Link to='/report'>
           <button class="button">Make a Report</button>
         </Link>

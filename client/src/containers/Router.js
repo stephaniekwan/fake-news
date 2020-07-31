@@ -5,10 +5,9 @@ import NavBar from './NavBar';
 
 import PromptPage from './PromptPage';
 import FAQPage from './FAQPage';
+import ProcessResults from './ProcessResults.js'
 import Results from '../components/Results';
 import Report from '../components/Report';
-// TODO: Report page
-// TODO: transition screen?
 
 const Router = () => {
     return (
@@ -18,6 +17,7 @@ const Router = () => {
                 <Switch>
                     <Route path='/' exact component={PromptPage} />
                     <Route path='/faq' exact component={FAQPage} />
+                    <Route path='/processing' exact component={ProcessResults} />
                     <Route path='/results' exact component={Results} />
                     <Route path='/report' exact component={Report} />
                 </Switch>
