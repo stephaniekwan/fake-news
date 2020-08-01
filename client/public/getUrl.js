@@ -16,10 +16,10 @@ window.getCurrentUrl = () => {
         var url = tab.url;
         document.getElementById('url').innerHTML = url;
     });*/
-    console.log(url);
+    //console.log(url);
     chrome.tabs.query({active: true, lastFocusedWindow: true}), function(tabs){
-        var tab = tabs[0];
-        console.log(tab.url);
+        var url = tabs[0].url;
+        console.log(url);
     }
 }
 

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
-//import psl from 'psl';
+// eslint-disable-next-line
+import axios from 'axios';
+import psl from 'psl';
+// eslint-disable-next-line
+//import getTitleAtUrl from 'get-title-at-url';
+var getTitleAtUrl = require('get-title-at-url');
 //import * as chrome from "sinon-chrome"
 
 
@@ -13,6 +18,7 @@ import { Link } from 'react-router-dom'
  * 4. make it redirect to the results page once the results come back
  * 5. hopefully calling the model will happen in this file, would happen before step 3
  *      - prob make request to the model
+ * 6. Allow for renanalysis
  * 
  * for reference:  (fields to store an article)
  *  url: str
@@ -41,18 +47,43 @@ function ProcessResults() {
     */
 
     useEffect(() => {
+        //window.getCurrentTabUrl(url => {
+        //    console.log(url);
+        //})
         //console.log(getCurrentUrl())
         //setURL(window.getCurrentUrl());
         //console.log(window.getCurrentUrl());
 
-        // get domain from url
-        //setDomain(psl.get(url)); // might have to do url.value
-        //console.log(domain);
+        
+        // model called here
+        /*
+        // send to db
+        axios.post('/articles', {
+            url: url,
+            domain: domain,
+            title: title,
+            rating: 420,
+            risk_level: 'yes',
+            timestamp: datetime
+        });*/
         
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
     }); 
 
+    const onClick = event => {
+        setURL('www.google.com');   // hard code for now
+        console.log(url);
+
+        // get domain from url
+        setDomain(psl.get("www.google.com")); // might have to do url.value
+        console.log(psl.get("www.google.com"));
+
+        // WTF WHY DOESNT THIS WORKKK
+        //getTitleAtUrl("www.google.com", res => {
+        //    console.log(res);
+        //});
+    }
 
     const handleClick = event => setModal('show');
     const handleClose = event => setModal(false);
@@ -61,7 +92,7 @@ function ProcessResults() {
     return (
         <div>
             <h1 className='Header'>Getting your results now!</h1>
-            <button>get url</button>
+            <button onClick={onClick}>get url</button>
             <button className='CancelButton' onClick={handleClick}>Cancel</button>
             
             <Link to='/results'>
