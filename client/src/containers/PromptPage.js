@@ -33,7 +33,8 @@ function PromptPage() {
     };
 
     useEffect(() => {
-        const user_id = window.localStorage.getItem("user_id");
+        // const user_id = window.localStorage.getItem("user_id");
+        let user_id = '2'
         if (typeof window !== "undefined" && user_id) {
             axios(`reports/${user_id}/user`).then((response) => {
                 console.log(response);
@@ -43,7 +44,7 @@ function PromptPage() {
     }, []);
 
     const handleClose = () => setModal(false);
-
+console.log(reports)
     return (
         <div className='App'>
             <h1 className='Header'>Prompt Page: S T O N K S</h1>
@@ -73,7 +74,7 @@ function PromptPage() {
                     <Button onClick={handleClose}>Close</Button>
                 </Modal.Footer>
             </Modal>
-           <RenderReports data={reports} isOrdered />
+           <RenderReports reports={reports} isOrdered />
         </div>
     );
 }
