@@ -33,7 +33,11 @@ function PromptPage() {
     };
 
     useEffect(() => {
+        // Dennis (uncomment this): to use the actual userId
+
+        // Dennis (comment this): to use the actual userId
         // const user_id = window.localStorage.getItem("user_id");
+
         let user_id = '2'
         if (typeof window !== "undefined" && user_id) {
             axios(`reports/${user_id}/user`).then((response) => {
