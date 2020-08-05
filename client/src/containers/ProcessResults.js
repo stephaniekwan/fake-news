@@ -6,8 +6,9 @@ import axios from 'axios';
 import psl from 'psl';
 // eslint-disable-next-line
 //import getTitleAtUrl from 'get-title-at-url';
-var getTitleAtUrl = require('get-title-at-url');
+//var getTitleAtUrl = require('get-title-at-url');
 //import * as chrome from "sinon-chrome"
+//import extract from 'article-parser';
 
 
 // TODO IN THIS FILE
@@ -30,8 +31,11 @@ var getTitleAtUrl = require('get-title-at-url');
 */
 
 function ProcessResults() {
+    const [article, setArticle] = useState(null);
+
+    // this is some random ass article i found
     // eslint-disable-next-line
-    const [url, setURL] = useState("");
+    const [url, setUrl] = useState("https://news.cornellcollege.edu/2020/08/cornell-college-included-new-york-times-article/");
     const [modal, setModal] = useState('hide');
     
     // used to save other values needed for POST request to db
@@ -46,7 +50,32 @@ function ProcessResults() {
     const [timestamp, setTimestamp] = useState(null); // datetime?
     */
 
+    /*
+    const getArticle = async (url) => {
+        try {
+            const article = await extract(url);
+            return article;
+        } catch (err) {
+            console.trace(err);
+        }
+    };*/
+
     useEffect(() => {
+        // parse article, hard coded with article url
+        /*
+        setArticle(getArticle(url));
+        setDomain(article['source']);
+        setTitle(article['title']);
+
+        console.log(url);
+        console.log(domain);
+        console.log(title);
+        */
+        //setUrl('www.google.com');
+        setDomain(psl.get('https://news.cornellcollege.edu/2020/08/cornell-college-included-new-york-times-article/'));
+        console.log(psl.get('https://news.cornellcollege.edu/2020/08/cornell-college-included-new-york-times-article/'));
+        setTitle('test');
+
         //window.getCurrentTabUrl(url => {
         //    console.log(url);
         //})
@@ -69,20 +98,34 @@ function ProcessResults() {
         
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }); 
+    }, [setUrl, setDomain, setTitle, article, url, domain, title]); 
 
     const onClick = event => {
-        setURL('www.google.com');   // hard code for now
-        console.log(url);
+        //setUrl('www.google.com');   // hard code for now
+        //console.log(url);
 
         // get domain from url
-        setDomain(psl.get("www.google.com")); // might have to do url.value
-        console.log(psl.get("www.google.com"));
+        //setDomain(psl.get("www.google.com")); // might have to do url.value
+        //console.log(psl.get("www.google.com"));
 
         // WTF WHY DOESNT THIS WORKKK
         //getTitleAtUrl("www.google.com", res => {
         //    console.log(res);
         //});
+
+        //setTitle('Google');
+        
+        axios.post('/articles', {
+            url: url,
+            domain: domain,
+            title: title,
+            rating: 420,
+            risk_level: 'yes',
+            timestamp: 'datetime'
+        }).then(res => {
+            setArticle(res.data);
+            console.log(res.data);
+        });
     }
 
     const handleClick = event => setModal('show');
@@ -121,18 +164,3 @@ function ProcessResults() {
 }
 
 export default ProcessResults
-
-/*
-chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-    let url = tabs[0].url;
-    
-}); 
-
-function getCurrentUrl(){
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, (tabs) => {
-        var tab = tabs[0];
-        var url = tab.url;
-        document.getElementById('url).innerHTML = url;
-    });
-} 
-*/ 
