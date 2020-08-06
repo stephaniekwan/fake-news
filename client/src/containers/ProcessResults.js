@@ -30,12 +30,8 @@ import psl from 'psl';
     timestamp: datetime
 */
 
-function ProcessResults() {
+function ProcessResults( {url} ) {
     const [article, setArticle] = useState(null);
-
-    // this is some random ass article i found
-    // eslint-disable-next-line
-    const [url, setUrl] = useState("https://news.cornellcollege.edu/2020/08/cornell-college-included-new-york-times-article/");
     const [modal, setModal] = useState('hide');
     
     // used to save other values needed for POST request to db
@@ -50,6 +46,8 @@ function ProcessResults() {
     const [timestamp, setTimestamp] = useState(null); // datetime?
     */
 
+    var date = new Date();
+
     /*
     const getArticle = async (url) => {
         try {
@@ -61,44 +59,37 @@ function ProcessResults() {
     };*/
 
     useEffect(() => {
-        // parse article, hard coded with article url
-        /*
-        setArticle(getArticle(url));
-        setDomain(article['source']);
-        setTitle(article['title']);
+        // parse article for required fields
+        setDomain(psl.get(url));
 
-        console.log(url);
-        console.log(domain);
-        console.log(title);
-        */
-        //setUrl('www.google.com');
-        setDomain(psl.get('https://news.cornellcollege.edu/2020/08/cornell-college-included-new-york-times-article/'));
-        console.log(psl.get('https://news.cornellcollege.edu/2020/08/cornell-college-included-new-york-times-article/'));
-        setTitle('test');
-
-        //window.getCurrentTabUrl(url => {
-        //    console.log(url);
-        //})
-        //console.log(getCurrentUrl())
-        //setURL(window.getCurrentUrl());
-        //console.log(window.getCurrentUrl());
-
+        console.log(date.toUTCString());
         
+        /*$.ajax({
+            url: "https://www.nytimes.com/2020/08/02/us/covid-college-reopening.html",
+            complete: function(data) {
+              alert(data.responseText);
+            }
+      });*/
+        
+
         // model called here
+
+        // set rating and risk_level
+
         /*
-        // send to db
+        // send to db, maybe move this to onclick idk
         axios.post('/articles', {
             url: url,
             domain: domain,
             title: title,
             rating: 420,
             risk_level: 'yes',
-            timestamp: datetime
+            timestamp: date.toUTCString()
         });*/
         
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }, [setUrl, setDomain, setTitle, article, url, domain, title]); 
+    }, [setDomain, setTitle, article, url, domain, title, date]); 
 
     const onClick = event => {
         //setUrl('www.google.com');   // hard code for now
@@ -112,9 +103,7 @@ function ProcessResults() {
         //getTitleAtUrl("www.google.com", res => {
         //    console.log(res);
         //});
-
-        //setTitle('Google');
-        
+        /*
         axios.post('/articles', {
             url: url,
             domain: domain,
@@ -125,7 +114,7 @@ function ProcessResults() {
         }).then(res => {
             setArticle(res.data);
             console.log(res.data);
-        });
+        });*/
     }
 
     const handleClick = event => setModal('show');

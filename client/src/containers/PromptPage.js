@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
-import {Modal, Button} from "react-bootstrap";
+import {Modal, Button, Form} from "react-bootstrap";
 import axios from "axios";
 import "../styles/PromptPage.css";
 
@@ -19,18 +19,20 @@ const RenderReports = ({isOrdered, reports}) => {
     ));
     return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
 }
-function PromptPage() {
+
+function PromptPage( {onUrlChange} ) {
     // eslint-disable-next-line
-    const [url, setURL] = useState("");
+    const [urlInput, setUrlInput] = useState("");
     const [modal, setModal] = useState(false);
     const [reports, setReports] = useState([]);
-
+    /*
     // function to handle getting url; placeholder til we can send to backend
     const handleClick = (event) => {
         //setURL(window.location.toString());
         //console.log(window.getCurrentUrl());
+        //var url = window.prompt("Enter your url: ");
         setModal("show");
-    };
+    };*/
 
     useEffect(() => {
         // Dennis (uncomment this): to use the actual userId
@@ -47,8 +49,19 @@ function PromptPage() {
         }
     }, []);
 
+    const handleChange = event => {
+        setUrlInput(event.target.value)
+    } 
+
+    const handleClick = useCallback(event => {
+        //console.log(urlInput);
+        onUrlChange(urlInput);
+    }, [onUrlChange, urlInput])
+
     const handleClose = () => setModal(false);
-console.log(reports)
+    const handleSubmit = () => window.alert("placeholder, fix later");
+    //console.log(reports)
+
     return (
         <div className='App'>
             <h1 className='Header'>Prompt Page: S T O N K S</h1>
@@ -56,22 +69,33 @@ console.log(reports)
             <h4 className='Prompt'>
                 Want to know what percentage of your content is likely to be false?
             </h4>
-            <div className='vertical'>
-                <Link to='/processing'>
-                    <button className='analyzeButton'>Analyze Article</button>
-                </Link>
-                <button className='analyzeButton' onClick={handleClick}>
-                    Get URL
-                </button>
-            </div>
 
+            <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="urlInput">
+                    <Form.Label>Enter the URL of your article.</Form.Label>
+                    <Form.Control 
+                        type="textarea"
+                        onChange={handleChange}
+                        rows="2" />
+                </Form.Group>
+
+                <div className='vertical'>
+                    <Link to='/processing'>
+                        <button className='analyzeButton' onClick={handleClick}>
+                            Analyze Article
+                        </button>
+                    </Link> 
+                </div>
+            </Form>
+
+        
             <Modal show={modal === "show"} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>URL</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
-                    <p>{url}</p>
+                    <p>{"placeholder again"}</p>
                 </Modal.Body>
 
                 <Modal.Footer>
@@ -84,13 +108,3 @@ console.log(reports)
 }
 
 export default PromptPage;
-/*
-
-    chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-        let url = tabs[0].url;
-
-
-});
-
-
-*/
