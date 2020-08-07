@@ -3,7 +3,10 @@ import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 // eslint-disable-next-line
 import axios from 'axios';
+import ParseDomain from './ParseDomain';
+import ParseTitle from './ParseTitle';
 import psl from 'psl';
+import '../styles/ProcessResults.css';
 // eslint-disable-next-line
 //import getTitleAtUrl from 'get-title-at-url';
 //var getTitleAtUrl = require('get-title-at-url');
@@ -40,11 +43,9 @@ function ProcessResults( {url} ) {
     // eslint-disable-next-line
     const [title, setTitle] = useState("");
     
-    /* hard code these for now
     const [rating, setRating] = useState("");   // i think this was percent
     const [riskLevel, setRiskLevel] = useState(0);
-    const [timestamp, setTimestamp] = useState(null); // datetime?
-    */
+    const [timestamp, setTimestamp] = useState(null);
 
     var date = new Date();
 
@@ -60,21 +61,7 @@ function ProcessResults( {url} ) {
 
     useEffect(() => {
         // parse article for required fields
-        setDomain(psl.get(url));
-
-        console.log(date.toUTCString());
-        
-        /*$.ajax({
-            url: "https://www.nytimes.com/2020/08/02/us/covid-college-reopening.html",
-            complete: function(data) {
-              alert(data.responseText);
-            }
-      });*/
-        
-
-        // model called here
-
-        // set rating and risk_level
+        //setDomain(psl.get(url));
 
         /*
         // send to db, maybe move this to onclick idk
@@ -82,9 +69,9 @@ function ProcessResults( {url} ) {
             url: url,
             domain: domain,
             title: title,
-            rating: 420,
-            risk_level: 'yes',
-            timestamp: date.toUTCString()
+            rating: rating,
+            risk_level: risk_level,
+            timestamp: timestamp
         });*/
         
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
@@ -92,25 +79,37 @@ function ProcessResults( {url} ) {
     }, [setDomain, setTitle, article, url, domain, title, date]); 
 
     const onClick = event => {
-        //setUrl('www.google.com');   // hard code for now
-        //console.log(url);
 
-        // get domain from url
-        //setDomain(psl.get("www.google.com")); // might have to do url.value
-        //console.log(psl.get("www.google.com"));
+        var parsedDomain = ParseDomain({url});
+        if (parsedDomain !== "Empty url provided") { 
+            setDomain(parsedDomain); // change?
+        }
+        console.log("parsedDomain: " + parsedDomain);
+        console.log("parsedDomain['host]: " + parsedDomain['host']);
+        console.log("domain: " + domain);
+        
+        var parsedTitle = ParseTitle(url);
+        if (parsedTitle !== "Empty url provided") {
+            setTitle(parsedTitle); 
+        }
+        console.log("parsedTitle: "+ parsedTitle);
+        console.log("title" + title);
 
-        // WTF WHY DOESNT THIS WORKKK
-        //getTitleAtUrl("www.google.com", res => {
-        //    console.log(res);
-        //});
+        // model called here using url
+
+        // set rating and risk_level using model results
+        setRating("90%");
+        setRiskLevel("green");
+        setTimestamp(date.toUTCString());
+
         /*
         axios.post('/articles', {
             url: url,
             domain: domain,
             title: title,
-            rating: 420,
-            risk_level: 'yes',
-            timestamp: 'datetime'
+            rating: rating,
+            risk_level: risk_level,
+            timestamp: timestamp
         }).then(res => {
             setArticle(res.data);
             console.log(res.data);
@@ -123,13 +122,16 @@ function ProcessResults( {url} ) {
     // onClick={e => console.log(window.getCurrentUrl()) for get url button
     return (
         <div>
-            <h1 className='Header'>Getting your results now!</h1>
-            <button onClick={onClick}>get url</button>
+            <h2 className='Header'>Getting your results now!</h2>
+            <h4>Your URL is: {url}</h4>
             <button className='CancelButton' onClick={handleClick}>Cancel</button>
             
             <Link to='/results'>
-                <button className='delete later when redirect set up'>Proceed to results</button>
+                <button className='ResultsButton'>Proceed to results</button>
             </Link>
+
+            <hr />
+            <button onClick={onClick}>Parse</button>
 
             <Modal show={modal === 'show'} onHide={handleClose} centered>
                 <Modal.Header closeButton>
@@ -142,9 +144,9 @@ function ProcessResults( {url} ) {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button variant='outline-primary' onClick={handleClose}>No, continue</Button>
+                    <Button variant='outline-secondary' onClick={handleClose}>Close</Button>
                     <Link to='/'>
-                        <Button variant='danger' onClick={handleClose}>Yes, cancel</Button>
+                        <Button variant='danger' onClick={handleClose}>Cancel</Button>
                     </Link>
                 </Modal.Footer>
             </Modal>
