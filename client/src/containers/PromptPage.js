@@ -2,6 +2,7 @@ import React, {useState, useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
 import {Modal, Button, Form} from "react-bootstrap";
 import axios from "axios";
+import styled from 'styled-components'
 import "../styles/PromptPage.css";
 
 // neutral screen, button for user to decide if they want to analyze article
@@ -51,7 +52,7 @@ function PromptPage( {onUrlChange} ) {
 
     const handleChange = event => {
         setUrlInput(event.target.value)
-    } 
+    }
 
     const handleClick = useCallback(event => {
         //console.log(urlInput);
@@ -71,24 +72,24 @@ function PromptPage( {onUrlChange} ) {
             </h4>
 
             <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="urlInput">
+                <PromptForm controlId="urlInput">
                     <Form.Label>Enter the URL of your article.</Form.Label>
-                    <Form.Control 
+                    <UrlInput
                         type="textarea"
                         onChange={handleChange}
                         rows="2" />
-                </Form.Group>
+                </PromptForm>
 
                 <div className='vertical'>
                     <Link to='/processing'>
                         <button className='analyzeButton' onClick={handleClick}>
                             Analyze Article
                         </button>
-                    </Link> 
+                    </Link>
                 </div>
             </Form>
 
-        
+
             <Modal show={modal === "show"} onHide={handleClose} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>URL</Modal.Title>
@@ -106,5 +107,18 @@ function PromptPage( {onUrlChange} ) {
         </div>
     );
 }
+
+
+const PromptForm = styled(Form.Group)`
+    text-align: center;
+    margin-left: 4rem;
+    margin-right: 4rem;
+`
+const UrlInput= styled(Form.Control)`
+    padding:10px;
+    border:0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+
+`
 
 export default PromptPage;
