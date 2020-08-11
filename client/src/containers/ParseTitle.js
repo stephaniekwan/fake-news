@@ -1,4 +1,4 @@
-import React from 'react';
+//import React from 'react';
 
 /*function makeHttpObject(){
     try {return new XMLHttpRequest();}
@@ -16,9 +16,17 @@ function ParseTitle ( {url} ) {
     if(url === "" || url === "null") return "Empty url provided" // error handling
 
     var request = new XMLHttpRequest();
-    request.open("GET", url, true);
-    request.send(null);
-    var title = document.getElementsByTagName("title")[0];
+    request.open("GET", url, false);
+    //request.responseType = "something";
+    
+    //REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+    //var title = document.getElementsByTagName("title")[0].innerHTML;
+    //document.getElementsByTagName("title")[0].innerHTML = request.responseText;
+    //var title = (/<title>(.*?)<\/title>/m).exec(request.responseText)[1];
+    var title = document.title;
+    //var titleString = title.toString();
+    //var title = document.getElementsByTagName("title")[0].innerHTML;
+    request.send();
     return title;
     
 }

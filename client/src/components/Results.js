@@ -1,16 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import '../styles/Results.css';
 
-
-function Results() {
+/*
+ * Params:
+ *  - setReanalyze: allows Results.js to communicate that user wants to reanalyze
+ *  - article: passes the data from db for the article user currently interacting with
+ */
+function Results( {setReanalyze, article} ) {
   const [articles, setArticles] = useState(0);
   useEffect(() => {
     axios.get('/articles').then(response => {
       setArticles(response.data.articles);
     });
   }, []);
+
+  // if user wants to reanalyze, change state of parent component to reflect that
+  const handleClick = useCallback(event => {
+    console.log("setting reanalyze = true");
+    setReanalyze(true);
+  }, [setReanalyze]);
 
   return (
     <div className="App">
@@ -25,7 +35,7 @@ function Results() {
           Disagree with your results?
         </p>
         <Link to='/processing'>
-          <button class="button">Renanalyze Article</button>
+          <button onClick={handleClick} class="button">Renanalyze Article</button>
         </Link>
         <Link to='/report'>
           <button class="button">Make a Report</button>

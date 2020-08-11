@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
-// eslint-disable-next-line
 import axios from 'axios';
 import ParseDomain from './ParseDomain';
 import ParseTitle from './ParseTitle';
-import psl from 'psl';
 import '../styles/ProcessResults.css';
-// eslint-disable-next-line
 //import getTitleAtUrl from 'get-title-at-url';
 //var getTitleAtUrl = require('get-title-at-url');
 //import * as chrome from "sinon-chrome"
@@ -33,87 +30,126 @@ import '../styles/ProcessResults.css';
     timestamp: datetime
 */
 
-function ProcessResults( {url} ) {
-    const [article, setArticle] = useState(null);
+/*
+ * Params:
+ *  - url: gets the url passed from promptpage
+ *  - reanalyze: gets the boolean for whether or not user wants to reanalyze (t/f)
+ *  - setReanalyze: allows ProcessResults.js to set var back to false once reanalysis done
+ *  - setArticle: pass the article to parent component so Results.js can display
+ */
+function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
     const [modal, setModal] = useState('hide');
     
     // used to save other values needed for POST request to db
-    // eslint-disable-next-line
-    const [domain, setDomain] = useState("");
-    // eslint-disable-next-line
-    const [title, setTitle] = useState("");
-    
-    const [rating, setRating] = useState("");   // i think this was percent
-    const [riskLevel, setRiskLevel] = useState(0);
-    const [timestamp, setTimestamp] = useState(null);
-
+    var domain = "";
+    var title = "";
+    var rating = "";
+    var riskLevel = 0;
+    var timestamp = null;
     var date = new Date();
 
-    /*
-    const getArticle = async (url) => {
-        try {
-            const article = await extract(url);
-            return article;
-        } catch (err) {
-            console.trace(err);
-        }
-    };*/
-
     useEffect(() => {
-        // parse article for required fields
-        //setDomain(psl.get(url));
-
-        /*
-        // send to db, maybe move this to onclick idk
-        axios.post('/articles', {
-            url: url,
-            domain: domain,
-            title: title,
-            rating: rating,
-            risk_level: risk_level,
-            timestamp: timestamp
-        });*/
-        
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }, [setDomain, setTitle, article, url, domain, title, date]); 
+    }, [domain, title, url, date]); 
 
+    url = "https://www.nbcnews.com/news/amp/ncna1236249";
     const onClick = event => {
 
-        var parsedDomain = ParseDomain({url});
+        var parsedDomain = ParseDomain(url);
         if (parsedDomain !== "Empty url provided") { 
-            setDomain(parsedDomain); // change?
+            domain = parsedDomain;
         }
         console.log("parsedDomain: " + parsedDomain);
-        console.log("parsedDomain['host]: " + parsedDomain['host']);
         console.log("domain: " + domain);
         
         var parsedTitle = ParseTitle(url);
         if (parsedTitle !== "Empty url provided") {
-            setTitle(parsedTitle); 
+            title = parsedTitle; 
         }
+        //why the fuck do you not EXIST REEEEEEEEEEEEEEEEE
+        //; -; ill cry
         console.log("parsedTitle: "+ parsedTitle);
-        console.log("title" + title);
+        console.log("title: " + title);
 
-        // model called here using url
+        console.log("reanalyze: " + reanalyze);
+        if (reanalyze) {         
+            // reanalyze == true, set back to false
+            // call model no matter what
+            console.log("setting reanalyze = false")
+            setReanalyze(false);
+        
+        } else {
+            // search db for it first
+            var route = '/articles/stonks';
+            var response;
+            var notFound;
 
-        // set rating and risk_level using model results
-        setRating("90%");
-        setRiskLevel("green");
-        setTimestamp(date.toUTCString());
+            // try to get article from db
+            axios.get(route)
+                .catch(err => {
+                    // error uncaught by the article router
+                    if(err.response) {
+                        console.log(err.response);        // body of error
+                        console.log(err.response.status); // error number
+                    }
+                })
+                .then(res => {
+                    // check for error returned by article router
+                    //console.log(res.data);
+                    
+                    if(res.data.error === null) {
+                        // no error; article successfully found
+                        console.log("article: " + res.data.article);
+                        setArticle(res.data.article); // dictionary
+                        notFound = false;
 
-        /*
-        axios.post('/articles', {
-            url: url,
-            domain: domain,
-            title: title,
-            rating: rating,
-            risk_level: risk_level,
-            timestamp: timestamp
-        }).then(res => {
-            setArticle(res.data);
-            console.log(res.data);
-        });*/
+                    } else if (res.data.error.status === 404) {
+                        console.log(404);
+                        notFound = true;
+                    }
+                });
+
+            console.log("notFound: " + notFound);
+            if (notFound) {
+                console.log("notFound: " + notFound);
+            }
+
+            /*
+            axios.get(route).then(res => {
+                console.log("getting article from db");
+                console.log(res.data);
+                // response = res;
+                if(res.data === "Article not found in database") {
+
+                    // **** insert call to model 
+    
+                    // hard-coded for now, in future use results from model
+                    rating = "90%";
+                    riskLevel = "green";
+                    timestamp = date.toUTCString();
+    
+                    // create new article in  db
+                    axios.post('/articles', {
+                        url: url,
+                        domain: domain,
+                        title: title,
+                        rating: rating,
+                        risk_level: riskLevel,
+                        timestamp: timestamp
+                    }).then(res => {
+                        setArticle(res.data);
+                        console.log(res.data);
+                    });
+    
+                } else {
+                    // article alrdy exists, just display the data from db
+                    setArticle(res.data);
+                }
+            });*/
+
+            
+        }
     }
 
     const handleClick = event => setModal('show');

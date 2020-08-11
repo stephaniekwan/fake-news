@@ -11,15 +11,11 @@ import Report from '../components/Report';
 
 const Router = () => {
 
-    // parent state
+    // parent states
     const [url, setUrl] = useState("");
+    const [reanalyze, setReanalyze] = useState(false);
+    const [article, setArticle] = useState(null);
 
-    /*
-    // wrapper func for child
-    const wrapperSetUrl = useCallback(val => {
-        setUrl(val);
-    }, [setUrl]);
-    */
     return (
         <BrowserRouter>
             <div className='App' id='main-component'>
@@ -27,13 +23,29 @@ const Router = () => {
                 <Switch>
                     <Route 
                         exact path='/' 
-                        render={(props) => <PromptPage {...props} onUrlChange={setUrl} /> } />
+                        render={(props) => <PromptPage {...props} onUrlChange={setUrl} /> } 
+                    />
+                    
                     <Route path='/faq' exact component={FAQPage} />
+                    
                     <Route 
                         exact path='/processing'
-                        render={(props) => <ProcessResults {...props} url={url} /> } />
-                    <Route path='/results' exact component={Results} />
+                        render={(props) => <ProcessResults {...props} 
+                            url={url} 
+                            reanalyze={reanalyze} 
+                            setReanalyze={setReanalyze} 
+                            setArticle={setArticle} /> } 
+                    />
+
+                    <Route 
+                        exact path='/results'
+                        render={(props) => <Results {...props}
+                            setReanalyze={setReanalyze} 
+                            article={article} /> } 
+                    />
+
                     <Route path='/report' exact component={Report} />
+
                 </Switch>
             </div>
         </BrowserRouter>

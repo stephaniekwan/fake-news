@@ -1,4 +1,4 @@
-import React from 'react'; 
+//import React from 'react'; 
 
 function ParseDomain( url ) {
     /* Takes a url and parses for domain */
@@ -13,11 +13,11 @@ function ParseDomain( url ) {
         splitQueries = queries[i].split('=');
         search[splitQueries[0]] = splitQueries[1];
     }
-
-    return {
+    return parser.hostname;
+    /*return {
             host: parser.host,
             hostname: parser.hostname
-    }
+    }*/
 }
 
 export default ParseDomain;
