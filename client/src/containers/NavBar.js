@@ -36,6 +36,16 @@ export default () => {
             <Navbar className='navbar'>
                 {
                     <>
+                        <div className='left'>
+                            <Link to='/myreport'>
+                                <input
+                                    className='Info'
+                                    type='image'
+                                    src='./assets/list-24px.svg'
+                                    art='report-list'
+                                />
+                            </Link>
+                        </div>
                         <div className='centered'>
                             <Link to='/'>
                                 <h1 className='Title'>S T O N K S</h1>
@@ -51,6 +61,8 @@ export default () => {
                                 />
                             </Link>
                         </div>
+
+
                     </>
                 }
             </Navbar>

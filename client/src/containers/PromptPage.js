@@ -1,31 +1,16 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useState, useCallback} from "react";
 import {Link} from "react-router-dom";
 import {Modal, Button, Form} from "react-bootstrap";
-import axios from "axios";
 import styled from 'styled-components'
 import "../styles/PromptPage.css";
 
 // neutral screen, button for user to decide if they want to analyze article
 
-const RenderReports = ({isOrdered, reports}) => {
-    if (!reports) return null;
-
-    const list = reports.map((report, i) => (
-        <li key={`${i}_${report.user_id}`}>
-            <p>user id: </p><span>{report.user_id}</span>
-            <p>comment: </p><span>{report.comment}</span>
-            <p>tag: </p><span>{report.tag}</span>
-            <p>url: </p><span>{report.url}</span>
-        </li>
-    ));
-    return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
-}
 
 function PromptPage( {onUrlChange} ) {
     // eslint-disable-next-line
     const [urlInput, setUrlInput] = useState("");
     const [modal, setModal] = useState(false);
-    const [reports, setReports] = useState([]);
     /*
     // function to handle getting url; placeholder til we can send to backend
     const handleClick = (event) => {
@@ -35,20 +20,6 @@ function PromptPage( {onUrlChange} ) {
         setModal("show");
     };*/
 
-    useEffect(() => {
-        // Dennis (uncomment this): to use the actual userId
-
-        // Dennis (comment this): to use the actual userId
-        // const user_id = window.localStorage.getItem("user_id");
-
-        let user_id = '2'
-        if (typeof window !== "undefined" && user_id) {
-            axios(`reports/${user_id}/user`).then((response) => {
-                console.log(response);
-                setReports(response.data.report);
-            });
-        }
-    }, []);
 
     const handleChange = event => {
         setUrlInput(event.target.value)
@@ -103,7 +74,6 @@ function PromptPage( {onUrlChange} ) {
                     <Button onClick={handleClose}>Close</Button>
                 </Modal.Footer>
             </Modal>
-           <RenderReports reports={reports} isOrdered />
         </div>
     );
 }
@@ -118,7 +88,6 @@ const UrlInput= styled(Form.Control)`
     padding:10px;
     border:0;
     box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
-
 `
 
 export default PromptPage;
