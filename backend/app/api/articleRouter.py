@@ -57,7 +57,7 @@ def get_article(article_url):
     try:
         logging.info("Getting a single article...")
         article = articleService.get_article(article_url)
-        if article == 'No such document':
+        if article == 'No such article':
             logging.error("Article not found in database")
             return sendError(404, "Article not found in database")
         return { "article": article, "error": None }
