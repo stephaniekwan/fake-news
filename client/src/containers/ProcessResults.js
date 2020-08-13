@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-import ParseDomain from './ParseDomain';
-import ParseTitle from './ParseTitle';
+import ParseDomain from '../utils/ParseDomain';
+import ParseTitle from '../utils/ParseTitle';
 import '../styles/ProcessResults.css';
 //import getTitleAtUrl from 'get-title-at-url';
 //var getTitleAtUrl = require('get-title-at-url');
@@ -39,6 +39,10 @@ import '../styles/ProcessResults.css';
  */
 function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
     const [modal, setModal] = useState('hide');
+
+    // axios API for cancelling requests
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source()
     
     // used to save other values needed for POST request to db
     var domain = "";
@@ -73,21 +77,26 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         console.log("title: " + title);
 
         console.log("reanalyze: " + reanalyze);
+        var route = '/articles/stonks';
+
         if (reanalyze) {         
             // reanalyze == true, set back to false
             // call model no matter what
             console.log("setting reanalyze = false")
             setReanalyze(false);
+            /*axios.post(route, {
+                risk_level
+            })*/
         
         } else {
-            // search db for it first
-            var route = '/articles/stonks';
-            var response;
-            var notFound;
-
             // try to get article from db
-            axios.get(route)
-                .catch(err => {
+            axios.get(route, {
+                cancelToken: source.token
+            }).catch(err => {
+                    // User wishes to cancel
+                    if (axios.isCancel(err)) {
+                        console.log('Request canceled', err.message);
+                    }
                     // error uncaught by the article router
                     if(err.response) {
                         console.log(err.response);        // body of error
@@ -97,59 +106,48 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                 .then(res => {
                     // check for error returned by article router
                     //console.log(res.data);
-                    
                     if(res.data.error === null) {
                         // no error; article successfully found
                         console.log("article: " + res.data.article);
                         setArticle(res.data.article); // dictionary
-                        notFound = false;
+                        //notFound = false;
 
                     } else if (res.data.error.status === 404) {
+                        // article not found in db, make new article
                         console.log(404);
-                        notFound = true;
+                        //notFound = true;
+                        // hard-coded for now, in future use results from model
+                        rating = "90%";
+                        riskLevel = "green";
+                        timestamp = date.toUTCString();
+
+                        axios.post('/articles', {
+                            url: url,
+                            domain: domain,
+                            title: title,
+                            rating: rating,
+                            risk_level: riskLevel,
+                            timestamp: timestamp
+                        }, {
+                            cancelToken: source.token
+                        }).catch(err => {
+                            // User wishes to cancel
+                            if (axios.isCancel(err)) {
+                                console.log('Request canceled', err.message);
+                            }
+                        }).then(res => {
+                            setArticle(res.data);
+                            console.log(res.data);
+                        });
                     }
                 });
-
-            console.log("notFound: " + notFound);
-            if (notFound) {
-                console.log("notFound: " + notFound);
-            }
-
-            /*
-            axios.get(route).then(res => {
-                console.log("getting article from db");
-                console.log(res.data);
-                // response = res;
-                if(res.data === "Article not found in database") {
-
-                    // **** insert call to model 
-    
-                    // hard-coded for now, in future use results from model
-                    rating = "90%";
-                    riskLevel = "green";
-                    timestamp = date.toUTCString();
-    
-                    // create new article in  db
-                    axios.post('/articles', {
-                        url: url,
-                        domain: domain,
-                        title: title,
-                        rating: rating,
-                        risk_level: riskLevel,
-                        timestamp: timestamp
-                    }).then(res => {
-                        setArticle(res.data);
-                        console.log(res.data);
-                    });
-    
-                } else {
-                    // article alrdy exists, just display the data from db
-                    setArticle(res.data);
-                }
-            });*/
-
-            
         }
+    }
+
+    // on click function to cancel the request for analysis
+    const handleCancel = event => {
+        source.cancel('Operation canceled by user.');
+        setModal(false);
     }
 
     const handleClick = event => setModal('show');
@@ -182,7 +180,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                 <Modal.Footer>
                     <Button variant='outline-secondary' onClick={handleClose}>Close</Button>
                     <Link to='/'>
-                        <Button variant='danger' onClick={handleClose}>Cancel</Button>
+                        <Button variant='danger' onClick={handleCancel}>Cancel</Button>
                     </Link>
                 </Modal.Footer>
             </Modal>

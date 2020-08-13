@@ -16,17 +16,21 @@ function ParseTitle ( {url} ) {
     if(url === "" || url === "null") return "Empty url provided" // error handling
 
     var request = new XMLHttpRequest();
-    request.open("GET", url, false);
+    request.open("GET", url, true);
     //request.responseType = "something";
-    
+    request.responseType = "text";
+    request.send();
     //REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
-    //var title = document.getElementsByTagName("title")[0].innerHTML;
+    //WORK
+    var title = document.getElementsByTagName("title")[0].innerHTML;
     //document.getElementsByTagName("title")[0].innerHTML = request.responseText;
-    //var title = (/<title>(.*?)<\/title>/m).exec(request.responseText)[1];
-    var title = document.title;
+   //var title = (/<title>(.*?)<\/title>/m).exec(request.responseText)[0];
+    //var title = document.title;
+    //var title = document.querySelector('title');
+    console.log(title);
     //var titleString = title.toString();
     //var title = document.getElementsByTagName("title")[0].innerHTML;
-    request.send();
+    
     return title;
     
 }

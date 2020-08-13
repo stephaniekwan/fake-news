@@ -4,6 +4,7 @@ import './styles/index.css';
 import Router from './containers/Router'
 import * as serviceWorker from './serviceWorker';
 console.log(window.location.href)
+
 ReactDOM.render(
   <React.StrictMode>
     <Router />
