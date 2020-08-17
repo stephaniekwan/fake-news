@@ -59,17 +59,11 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
 
     url = "https://www.nbcnews.com/news/amp/ncna1236249";
     const onClick = event => {
-        Storage.prototype.setObj = function(key, obj) {
-            return this.setItem(key, JSON.stringify(obj))
-        }
-        Storage.prototype.getObj = function(key) {
-            return JSON.parse(this.getItem(key))
-        }
 
         if (
             typeof window !== "undefined"
         ) {
-            let storedArticles = JSON.parse(localStorage.getItem("articles")) || [];
+            let storedArticles = localStorage.getObj("articles")|| [];
             storedArticles.push({
                 url,
                 domain,
@@ -77,7 +71,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                 riskLevel,
                 date
             })
-            localStorage.setItem('articles', JSON.stringify(storedArticles));
+            localStorage.setObj('articles', storedArticles);
         }
 
         var parsedDomain = ParseDomain(url);
@@ -206,6 +200,14 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
             </Modal>
         </div>
     )
+}
+
+// Override default storage methods: setItem(), getItem
+Storage.prototype.setObj = function(key, obj) {
+    return this.setItem(key, JSON.stringify(obj))
+}
+Storage.prototype.getObj = function(key) {
+    return JSON.parse(this.getItem(key))
 }
 
 export default ProcessResults
