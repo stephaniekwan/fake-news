@@ -12,7 +12,7 @@ import '../styles/ProcessResults.css';
 
 
 // TODO IN THIS FILE
-/* 
+/*
  * 1. get the article url
  * 2. parse article info for fields needed to store in db
  * 3. POST request to /articles
@@ -20,7 +20,7 @@ import '../styles/ProcessResults.css';
  * 5. hopefully calling the model will happen in this file, would happen before step 3
  *      - prob make request to the model
  * 6. Allow for renanalysis
- * 
+ *
  * for reference:  (fields to store an article)
  *  url: str
     domain: str
@@ -43,7 +43,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
     // axios API for cancelling requests
     const CancelToken = axios.CancelToken;
     const source = CancelToken.source()
-    
+
     // used to save other values needed for POST request to db
     var domain = "";
     var title = "";
@@ -55,21 +55,41 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
     useEffect(() => {
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }, [domain, title, url, date]); 
+    }, [domain, title, url, date]);
 
     url = "https://www.nbcnews.com/news/amp/ncna1236249";
     const onClick = event => {
+        Storage.prototype.setObj = function(key, obj) {
+            return this.setItem(key, JSON.stringify(obj))
+        }
+        Storage.prototype.getObj = function(key) {
+            return JSON.parse(this.getItem(key))
+        }
+
+        if (
+            typeof window !== "undefined"
+        ) {
+            let storedArticles = JSON.parse(localStorage.getItem("articles")) || [];
+            storedArticles.push({
+                url,
+                domain,
+                rating,
+                riskLevel,
+                date
+            })
+            localStorage.setItem('articles', JSON.stringify(storedArticles));
+        }
 
         var parsedDomain = ParseDomain(url);
-        if (parsedDomain !== "Empty url provided") { 
+        if (parsedDomain !== "Empty url provided") {
             domain = parsedDomain;
         }
         console.log("parsedDomain: " + parsedDomain);
         console.log("domain: " + domain);
-        
+
         var parsedTitle = ParseTitle(url);
         if (parsedTitle !== "Empty url provided") {
-            title = parsedTitle; 
+            title = parsedTitle;
         }
         //why the fuck do you not EXIST REEEEEEEEEEEEEEEEE
         //; -; ill cry
@@ -79,7 +99,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         console.log("reanalyze: " + reanalyze);
         var route = '/articles/stonks';
 
-        if (reanalyze) {         
+        if (reanalyze) {
             // reanalyze == true, set back to false
             // call model no matter what
             console.log("setting reanalyze = false")
@@ -87,7 +107,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
             /*axios.post(route, {
                 risk_level
             })*/
-        
+
         } else {
             // try to get article from db
             axios.get(route, {
@@ -159,7 +179,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
             <h2 className='Header'>Getting your results now!</h2>
             <h4>Your URL is: {url}</h4>
             <button className='CancelButton' onClick={handleClick}>Cancel</button>
-            
+
             <Link to='/results'>
                 <button className='ResultsButton'>Proceed to results</button>
             </Link>
@@ -169,7 +189,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
 
             <Modal show={modal === 'show'} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirm Cancellation</Modal.Title>  
+                    <Modal.Title>Confirm Cancellation</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
