@@ -7,6 +7,7 @@ import PromptPage from './PromptPage';
 import FAQPage from './FAQPage';
 import ProcessResults from './ProcessResults.js'
 import Myreport from './MyReport'
+import Myarticle from './MyArticle'
 import Results from '../components/Results';
 import Report from '../components/Report';
 
@@ -40,6 +41,11 @@ const Router = () => {
                     <Route
                         exact path='/myreport'
                         render={(props) => <Myreport {...props} /> }
+                    />
+
+                    <Route
+                        exact path='/myarticle'
+                        render={(props) => <Myarticle {...props} /> }
                     />
 
                     <Route

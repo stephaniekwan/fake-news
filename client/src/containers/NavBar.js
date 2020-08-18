@@ -46,6 +46,16 @@ export default () => {
                                 />
                             </Link>
                         </div>
+                        <div>
+                            <Link to='/myarticle'>
+                                <input
+                                    className='Info'
+                                    type='image'
+                                    src='./assets/article.png'
+                                    art='article-list'
+                                />
+                            </Link>
+                        </div>
                         <div className='centered'>
                             <Link to='/'>
                                 <h1 className='Title'>S T O N K S</h1>
