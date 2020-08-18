@@ -1,6 +1,12 @@
 from flask_script import Manager
 from livereload import Server
 
+# for the model
+from flask import Flask, abort, jsonify, request, render_template
+import joblib
+from app import webscraping
+import json
+
 from app import create_app
 import os
 
@@ -21,3 +27,22 @@ if __name__ == "__main__":
     # Dennis(To do): Investigate sometimes, livereload does not work
     server = Server(manager.run())
     server.serve()
+
+
+"""
+pipeline = joblib.load('./pipeline.sav')
+
+# after getting the cleaned text from the article 
+# see functions in webscraping.py
+pred_headline = pipeline.predict(headline)
+pred_text = pipeline.predict(text)
+
+# feel like this is more tailored to testing using the dataset
+dic = {0:'real', 1:'fake'}
+
+
+
+
+"""
+
+

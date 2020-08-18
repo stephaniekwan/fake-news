@@ -13,8 +13,19 @@ import PickColor from '../utils/PickColor';
  *            var percentage = article[rating];
  *            var headline = article[title];
  *            var color = article[risk_level];  // style = color
- *           and i guess in model we put instead of XX% as like {percentage}
- *            does that work?
+ * TODO: add message if article was pulled from db 
+ *      if match found in database wtih a timestamp not from today
+ *      var timestamp = article['timestamp'];
+ *      var today = new Date();
+ *    this is for the month year day thing
+ *      var todayDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+ *    this is for time
+ *      var todayTime = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+ *     combine
+ *      var todayTimeDate = todayDate + ' ' + todayTime;
+ *      if (timestamp === todayTimeDate){
+ *          console.log("This article has been already analyzed on (timestamp?). You may request reanalysis.")
+ *      }
  * 
  */
 function Results( {setReanalyze, article} ) {
