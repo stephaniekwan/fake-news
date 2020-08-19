@@ -3,6 +3,7 @@ import {Navbar} from "react-bootstrap";
 import {Link} from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import "../styles/NavBar.css";
+import { DropdownButton,Dropdown } from 'react-bootstrap'
 //import Report from '../components/Report'
 //import App from '../components/App'
 
@@ -55,6 +56,16 @@ export default () => {
                                     art='article-list'
                                 />
                             </Link>
+                        </div>
+                        <div>
+                          <DropdownButton id="dropdown-item-button">
+                            <Link to='/myreport'>
+                                <Dropdown.Item as="button">My Reports</Dropdown.Item>
+                            </Link>
+                            <Link to='/myarticle'>
+                                <Dropdown.Item as="button">My Articles</Dropdown.Item>
+                            </Link>
+                          </DropdownButton>
                         </div>
                         <div className='centered'>
                             <Link to='/'>
