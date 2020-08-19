@@ -4,7 +4,6 @@ import { DropdownButton,Dropdown } from 'react-bootstrap'
 import {Link} from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import "../styles/NavBar.css";
-import { DropdownButton,Dropdown } from 'react-bootstrap'
 //import Report from '../components/Report'
 //import App from '../components/App'
 
@@ -59,14 +58,10 @@ export default () => {
                             </Link>
                         </div>
                         <div>
-                          <DropdownButton id="dropdown-item-button">
-                            <Link to='/myreport'>
-                                <Dropdown.Item as="button">My Reports</Dropdown.Item>
-                            </Link>
-                            <Link to='/myarticle'>
-                                <Dropdown.Item as="button">My Articles</Dropdown.Item>
-                            </Link>
-                          </DropdownButton>
+                            <DropdownButton id="dropdown-item-button">
+                                <Dropdown.Item href="/myreport">My Reports</Dropdown.Item>
+                                <Dropdown.Item href="/myarticle">My Articles</Dropdown.Item>
+                            </DropdownButton>
                         </div>
                         <div className='centered'>
                             <Link to='/'>
