@@ -59,8 +59,12 @@ export default () => {
                         </div>
                         <div>
                             <DropdownButton id="dropdown-item-button">
-                                <Dropdown.Item href="/myreport">My Reports</Dropdown.Item>
-                                <Dropdown.Item href="/myarticle">My Articles</Dropdown.Item>
+                                <Link to='/myreport'>
+                                    <Dropdown.Item as="button">My Reports</Dropdown.Item>
+                                </Link>
+                                <Link to='/myarticle'>
+                                    <Dropdown.Item as="button">My Articles</Dropdown.Item>
+                                </Link>
                             </DropdownButton>
                         </div>
                         <div className='centered'>
