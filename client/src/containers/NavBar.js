@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Navbar} from "react-bootstrap";
+import { DropdownButton,Dropdown } from 'react-bootstrap'
 import {Link} from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 import "../styles/NavBar.css";
@@ -55,6 +56,12 @@ export default () => {
                                     art='article-list'
                                 />
                             </Link>
+                        </div>
+                        <div>
+                            <DropdownButton id="dropdown-item-button">
+                                <Dropdown.Item href="/myreport">My Reports</Dropdown.Item>
+                                <Dropdown.Item href="/myarticle">My Articles</Dropdown.Item>
+                            </DropdownButton>
                         </div>
                         <div className='centered'>
                             <Link to='/'>
