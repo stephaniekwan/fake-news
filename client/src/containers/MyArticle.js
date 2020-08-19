@@ -34,9 +34,8 @@ function PromptPage({onUrlChange}) {
     const [articles, setArticles] = useState([]);
 
     useEffect(() => {
-
         if (typeof window !== "undefined") {
-            let storedArticles = localStorage.getObj("articles")|| [];
+            let storedArticles = localStorage.getObj("articles") || [];
             setArticles(storedArticles);
         }
     }, []);
@@ -45,7 +44,13 @@ function PromptPage({onUrlChange}) {
         <div className='App'>
             <Header className='Header'>Previous articles:</Header>
             <Link to='/'>
-                <button>Home</button>
+                <HomeButtonWrapper>
+                    <HomeButton
+                        type='image'
+                        src='./assets/home-button.svg'
+                        alt='./assets/home-button.svg'
+                    />
+                </HomeButtonWrapper>
             </Link>
             <RenderArticles articles={articles} isOrdered />
         </div>
@@ -69,8 +74,8 @@ const CardRow = styled.div`
     border-left: 2rem solid black;
 
     &:hover {
-        transform: translate3D(0,-1px,0) scale(1.009);
-      }
+        transform: translate3D(0, -1px, 0) scale(1.009);
+    }
     p {
         font-size: 1.7rem;
         font-weight: 200;
@@ -80,6 +85,11 @@ const CardRow = styled.div`
 
 const Header = styled.h1`
     font-size: 2.5rem;
-`
-
+`;
+const HomeButtonWrapper = styled.div`
+    margin-bottom: 2rem;
+`;
+const HomeButton = styled.input`
+    width: 3rem;
+`;
 export default PromptPage;
