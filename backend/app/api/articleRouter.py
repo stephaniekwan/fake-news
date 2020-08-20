@@ -52,8 +52,10 @@ def add_article():
         return sendError(500, "Error adding an article to database")
 
 
-@article_blueprint.route('/<article_url>', methods=['GET'])
-def get_article(article_url):
+@article_blueprint.route('/article', methods=['GET'])
+def get_article():
+    article_url = request.args.get('url')
+    article_url = article_url if article_url.endswith('/') else article_url + '/'
     try:
         logging.info("Getting a single article...")
         article = articleService.get_article(article_url)
