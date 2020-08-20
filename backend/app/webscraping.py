@@ -22,8 +22,9 @@ def get_text(url):
     headline = news_article.title
     text = news_article.text
 
+    result = headline + text
     # if you want to  return a list
-    return [headline, text]
+    return result
 
 # to clean the text
 def clean_data(article):
