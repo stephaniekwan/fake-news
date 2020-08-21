@@ -13,8 +13,10 @@ import Report from '../components/Report';
 
 const Router = () => {
 
+    var defaultUrl = "https://www.nbcnews.com/news/amp/ncna1236249"
+
     // parent states
-    const [url, setUrl] = useState("");
+    const [url, setUrl] = useState(defaultUrl);
     const [reanalyze, setReanalyze] = useState(false);
     const [article, setArticle] = useState(null);
 
