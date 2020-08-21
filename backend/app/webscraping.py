@@ -43,7 +43,7 @@ def clean_data(article):
     return cleaned_text
 
 #F
-print("STONKS")
+#print("STONKS")
 #print(clean_data("the cow jumped over the moon"))
 #sendHelp = get_text("https://amp.cnn.com/cnn/2020/08/17/us/coronavirus-college-university/index.html")
 #print(clean_data(sendHelp[1]))

@@ -3,7 +3,7 @@ from app import webscraping
 
 #pipeline = joblib.load('..model.pipeline.sav')
 #pipeline = joblib.load('/backend/app/model/pipeline.sav')
-pipeline = joblib.load('../backend/app/services/pipeline.sav')
+pipeline = joblib.load('../backend/app/model/pipeline.sav')
 
 def get_results(url):
     # define dictionary for possible values pipeline returns
