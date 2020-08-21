@@ -25,8 +25,8 @@ import '../styles/ProcessResults.css';
  *  url: str
     domain: str
     title: str
-    rating: float
-    risk_level: int
+    rating: string (% true)
+    risk_level: int (0 = low, 1 = moderate, 2 = high)
     timestamp: datetime
 */
 
@@ -46,33 +46,22 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
 
     // used to save other values needed for POST request to db
     var domain = "";
-    var title = "";
+    var title = "placeholder";
     var rating = "";
     var riskLevel = 0;
     var timestamp = null;
     var date = new Date();
 
+    /*
     useEffect(() => {
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
     }, [domain, title, url, date]);
+    */
 
-    url = "https://www.nbcnews.com/news/amp/ncna1236249";
+    //url = "https://www.nbcnews.com/news/amp/ncna1236249";
+
     const onClick = event => {
-
-        if (
-            typeof window !== "undefined"
-        ) {
-            let storedArticles = localStorage.getObj("articles")|| [];
-            storedArticles.push({
-                url,
-                domain,
-                rating,
-                riskLevel,
-                date
-            })
-            localStorage.setObj('articles', storedArticles);
-        }
 
         var parsedDomain = ParseDomain(url);
         if (parsedDomain !== "Empty url provided") {
@@ -81,6 +70,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         console.log("parsedDomain: " + parsedDomain);
         console.log("domain: " + domain);
 
+        /*
         var parsedTitle = ParseTitle(url);
         if (parsedTitle !== "Empty url provided") {
             title = parsedTitle;
@@ -88,10 +78,9 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         //why the fuck do you not EXIST REEEEEEEEEEEEEEEEE
         //; -; ill cry
         console.log("parsedTitle: "+ parsedTitle);
-        console.log("title: " + title);
+        console.log("title: " + title);*/
 
         console.log("reanalyze: " + reanalyze);
-        var route = '/articles/stonks';
 
         if (reanalyze) {
             // reanalyze == true, set back to false
@@ -104,37 +93,66 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
 
         } else {
             // try to get article from db
-            axios.get(route, {
+            axios.get('/articles/article', {
+                params: {
+                    url: url
+                }, 
                 cancelToken: source.token
             }).catch(err => {
-                    // User wishes to cancel
-                    if (axios.isCancel(err)) {
-                        console.log('Request canceled', err.message);
-                    }
-                    // error uncaught by the article router
-                    if(err.response) {
-                        console.log(err.response);        // body of error
-                        console.log(err.response.status); // error number
-                    }
-                })
-                .then(res => {
-                    // check for error returned by article router
-                    //console.log(res.data);
-                    if(res.data.error === null) {
-                        // no error; article successfully found
-                        console.log("article: " + res.data.article);
-                        setArticle(res.data.article); // dictionary
-                        //notFound = false;
+                // User wishes to cancel
+                if (axios.isCancel(err)) {
+                    console.log('Request canceled', err.message);
+                }
+                // error uncaught by the article router
+                if(err.response) {
+                    console.log(err.response);        // body of error
+                    console.log(err.response.status); // error number
+                }
+            }).then(res => {
+                console.log(res.data)
+                // check for error returned by article router
+                //console.log(res.data);
+                if(res.data.error === null) {
+                    // no error; article successfully found
+                    console.log(res.data)
+                    console.log("article: " + res.data.article);
+                    setArticle(res.data.article); // dictionary
+                    //notFound = false;
 
-                    } else if (res.data.error.status === 404) {
-                        // article not found in db, make new article
-                        console.log(404);
-                        //notFound = true;
-                        // hard-coded for now, in future use results from model
-                        rating = "90%";
-                        riskLevel = "green";
+                } else if (res.data.error.status === 404) {
+                    // article not found in db, make new article
+                    console.log(404);
+
+                    // pass url to model for analysis
+                    axios.get('/model', {
+                        params: {
+                            url: url
+                        }, 
+                        cancelToken: source.token
+
+                    // handle promise from GET request to model
+                    }).catch(err => {
+                        // User wishes to cancel
+                        if (axios.isCancel(err)) {
+                            console.log('Request canceled', err.message);
+                        }
+                    }).then(res => {
+                        // model returns dictionary with keys [results, range]
+                        var mResults = res.data.results;
+                        
+                        rating = mResults.range;
+
+                        // define risk level using range
+                        if (rating === "< 50%") {
+                            riskLevel = 2;
+                        } else if (rating === "60% - 75%") {
+                            riskLevel = 1;
+                        } else {
+                            riskLevel = 0;
+                        }
+
                         timestamp = date.toUTCString();
-
+                        // post request to /articles
                         axios.post('/articles', {
                             url: url,
                             domain: domain,
@@ -144,17 +162,35 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                             timestamp: timestamp
                         }, {
                             cancelToken: source.token
+
+                        // handle promise from POST request to /articles
                         }).catch(err => {
                             // User wishes to cancel
                             if (axios.isCancel(err)) {
                                 console.log('Request canceled', err.message);
                             }
                         }).then(res => {
-                            setArticle(res.data);
-                            console.log(res.data);
+                            setArticle(res.data.article);
+                            console.log(res.data.article);
                         });
-                    }
-                });
+                    });
+                }
+            });
+        }
+
+        // Add article to local storage
+        if (
+            typeof window !== "undefined"
+        ) {
+            let storedArticles = localStorage.getObj("articles")|| [];
+            storedArticles.push({
+                url,
+                domain,
+                rating,
+                riskLevel,
+                date
+            })
+            localStorage.setObj('articles', storedArticles);
         }
     }
 
@@ -172,14 +208,16 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         <div>
             <h2 className='Header'>Getting your results now!</h2>
             <h4>Your URL is: {url}</h4>
+
+            <button onClick={onClick}>Parse</button>
+
+            <hr />
+
             <button className='CancelButton' onClick={handleClick}>Cancel</button>
 
             <Link to='/results'>
                 <button className='ResultsButton'>Proceed to results</button>
             </Link>
-
-            <hr />
-            <button onClick={onClick}>Parse</button>
 
             <Modal show={modal === 'show'} onHide={handleClose} centered>
                 <Modal.Header closeButton>

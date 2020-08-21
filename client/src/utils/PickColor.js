@@ -1,8 +1,9 @@
 import ParseRating from './ParseRating';
 
 /*
- * async function to wait for rating to parse and then choose a color
- * accordingly 
+ * prob unneeded file now
+ *
+ * input -- a percentage
  * 
  * Returns a dictionary with the keys rating and color
  */

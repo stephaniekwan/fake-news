@@ -30,23 +30,29 @@ import PickColor from '../utils/PickColor';
  */
 function Results( {setReanalyze, article} ) {
   const [articles, setArticles] = useState(0);
-
+/*
   useEffect(() => {
     axios.get('/articles').then(response => {
       setArticles(response.data.articles);
     });
-  }, []);
+  }, []);*/
 
-  // figure out color of circle
-  //var dict = PickColor(article['rating']);
-  var dict = PickColor('30%');
-  var rating = dict['rating'];
-  var color = dict['color'];
-  var riskLevel = dict['riskLevel'];
+  var rating = article['rating'];
+  var riskLevel;
+  var color;
 
-  //console.log("rating: " + dict['rating']);
-  //console.log("color: " + dict['color']);
+  if (article['risk_level'] === 0) {
+    riskLevel = "low";
+    color = "green";
+  } else if (article['risk_level'] === 1) {
+    riskLevel = "moderate";
+    color = "yellow";
+  } else {
+    riskLevel = "high";
+    color = "red";
+  }
 
+  
 
   // if user wants to reanalyze, change state of parent component to reflect that
   const handleClick = useCallback(event => {
@@ -61,7 +67,7 @@ function Results( {setReanalyze, article} ) {
         <h1>Fake News Detector</h1>
         <div style={{backgroundColor: color}} class="circle"></div>
         <p class="body">
-          Our analysis finds this article to be about {rating}% factually accurate. You are at {riskLevel} risk of being exposed to false information.
+          Our analysis finds this article to be about {rating} factually accurate. You are at {riskLevel} risk of being exposed to false information.
         </p>
         <p class="body">
           Disagree with your results?
