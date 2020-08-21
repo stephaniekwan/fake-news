@@ -114,14 +114,12 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                 //console.log(res.data);
                 if(res.data.error === null) {
                     // no error; article successfully found
-                    console.log(res.data)
                     console.log("article: " + res.data.article);
                     setArticle(res.data.article); // dictionary
                     //notFound = false;
 
                 } else if (res.data.error.status === 404) {
                     // article not found in db, make new article
-                    console.log(404);
 
                     // pass url to model for analysis
                     axios.get('/model', {
@@ -158,6 +156,7 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                             domain: domain,
                             title: title,
                             rating: rating,
+                            reports: [],
                             risk_level: riskLevel,
                             timestamp: timestamp
                         }, {
