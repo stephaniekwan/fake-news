@@ -14,5 +14,6 @@ def create_app():
 
     app.register_blueprint(api.report_blueprint)
     app.register_blueprint(api.article_blueprint)
+    app.register_blueprint(api.model_blueprint)
 
     return app
