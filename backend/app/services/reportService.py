@@ -20,9 +20,8 @@ def get_all_reports():
         # get the unique report id
         doc_ref_gen = reports_ref.where(
             u'url', u'==', report['url']).where(
-                u'user_id', u'==', report['user_id']).where(
-                    u'tag', u'==', report['tag']).where(
-                        u'comment', u'==', report['comment']).limit(1).stream()
+                u'tag', u'==', report['tag']).where(
+                    u'comment', u'==', report['comment']).limit(1).stream()
         doc_ref = next(doc_ref_gen, None)
         report_ref = doc_ref.reference.id
 
@@ -44,10 +43,10 @@ def add_report(report):
     # TODO: (steph) dont use user_id field to decide if duplicate
 
     # Check for duplicate; if there is a duplicate, keep the old entry
-    existing = get_report_by_user_id(report['user_id'])
+    #existing = get_report_by_user_id(report['user_id'])
     #print("\nexisting: ", existing)
-    if existing != 'No such report':
-        return "Report already exists in database"
+    #if existing != 'No such report':
+    #    return "Report already exists in database"
     #elif existing['comment'] == report['comment']:
     #    return "Report with the same comment already exists"
 

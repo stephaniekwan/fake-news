@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Navbar} from "react-bootstrap";
+import {DropdownButton, Dropdown} from "react-bootstrap";
 import {Link} from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from "uuid";
 import "../styles/NavBar.css";
 //import Report from '../components/Report'
 //import App from '../components/App'
@@ -17,54 +18,44 @@ export default () => {
     // To do(Dennis): Investigate if we need to do somethings if users are in logged-in state
     useEffect(() => {
         setLoggedIn({
-            isLoggedIn:
-                typeof window !== "undefined" &&
-                window.localStorage.getItem("user_id") !== null
+            isLoggedIn: typeof window !== "undefined" && window.localStorage.getItem("user_id") !== null,
         });
 
-        if (
-            typeof window !== "undefined" &&
-            window.localStorage.getItem("user_id") == null
-        ) {
-            localStorage.setItem('user_id', uuidv4());
+        if (typeof window !== "undefined" && window.localStorage.getItem("user_id") == null) {
+            localStorage.setItem("user_id", uuidv4());
         }
-
     }, []);
 
     return (
         <div id='navbar-div' style={{height, backgroundColor: "rgb(31, 70, 129)"}}>
             <Navbar className='navbar'>
-                {
-                    <>
-                        <div className='left'>
+                <>
+                    <div className='left'>
+                        <DropdownButton title='Menu' id='dropdown-item-button'>
                             <Link to='/myreport'>
-                                <input
-                                    className='Info'
-                                    type='image'
-                                    src='./assets/list-24px.svg'
-                                    art='report-list'
-                                />
+                                <Dropdown.Item as='button'>My Reports</Dropdown.Item>
                             </Link>
-                        </div>
-                        <div className='centered'>
-                            <Link to='/'>
-                                <h1 className='Title'>S T O N K S</h1>
+                            <Link to='/myarticle'>
+                                <Dropdown.Item as='button'>My Articles</Dropdown.Item>
                             </Link>
-                        </div>
-                        <div className='right'>
-                            <Link to='/faq'>
-                                <input
-                                    className='Info'
-                                    type='image'
-                                    src='./assets/infobutton.png'
-                                    alt='./assets/infobutton2.png'
-                                />
-                            </Link>
-                        </div>
-
-
-                    </>
-                }
+                        </DropdownButton>
+                    </div>
+                    <div className='centered'>
+                        <Link to='/'>
+                            <h1 className='Title'>S T O N K S</h1>
+                        </Link>
+                    </div>
+                    <div className='right'>
+                        <Link to='/faq'>
+                            <input
+                                className='Info'
+                                type='image'
+                                src='./assets/infobutton.png'
+                                alt='./assets/infobutton2.png'
+                            />
+                        </Link>
+                    </div>
+                </>
             </Navbar>
         </div>
     );
@@ -85,4 +76,4 @@ export default () => {
         </Tabs>
     );
     */
-}
+};

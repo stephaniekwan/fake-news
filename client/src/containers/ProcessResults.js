@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-import ParseDomain from './ParseDomain';
-import ParseTitle from './ParseTitle';
+import ParseDomain from '../utils/ParseDomain';
+import ParseTitle from '../utils/ParseTitle';
 import '../styles/ProcessResults.css';
 //import getTitleAtUrl from 'get-title-at-url';
 //var getTitleAtUrl = require('get-title-at-url');
@@ -12,7 +12,7 @@ import '../styles/ProcessResults.css';
 
 
 // TODO IN THIS FILE
-/* 
+/*
  * 1. get the article url
  * 2. parse article info for fields needed to store in db
  * 3. POST request to /articles
@@ -20,13 +20,13 @@ import '../styles/ProcessResults.css';
  * 5. hopefully calling the model will happen in this file, would happen before step 3
  *      - prob make request to the model
  * 6. Allow for renanalysis
- * 
+ *
  * for reference:  (fields to store an article)
  *  url: str
     domain: str
     title: str
-    rating: float
-    risk_level: int
+    rating: string (% true)
+    risk_level: int (0 = low, 1 = moderate, 2 = high)
     timestamp: datetime
 */
 
@@ -39,117 +39,164 @@ import '../styles/ProcessResults.css';
  */
 function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
     const [modal, setModal] = useState('hide');
-    
+
+    // axios API for cancelling requests
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source()
+
     // used to save other values needed for POST request to db
     var domain = "";
-    var title = "";
+    var title = "placeholder";
     var rating = "";
     var riskLevel = 0;
     var timestamp = null;
     var date = new Date();
 
+    /*
     useEffect(() => {
         // https://www.npmjs.com/package/article-title  || dunno if this will work for title
         // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }, [domain, title, url, date]); 
+    }, [domain, title, url, date]);
+    */
 
-    url = "https://www.nbcnews.com/news/amp/ncna1236249";
+    //url = "https://www.nbcnews.com/news/amp/ncna1236249";
+
     const onClick = event => {
 
         var parsedDomain = ParseDomain(url);
-        if (parsedDomain !== "Empty url provided") { 
+        if (parsedDomain !== "Empty url provided") {
             domain = parsedDomain;
         }
         console.log("parsedDomain: " + parsedDomain);
         console.log("domain: " + domain);
-        
+
+        /*
         var parsedTitle = ParseTitle(url);
         if (parsedTitle !== "Empty url provided") {
-            title = parsedTitle; 
+            title = parsedTitle;
         }
         //why the fuck do you not EXIST REEEEEEEEEEEEEEEEE
         //; -; ill cry
         console.log("parsedTitle: "+ parsedTitle);
-        console.log("title: " + title);
+        console.log("title: " + title);*/
 
         console.log("reanalyze: " + reanalyze);
-        if (reanalyze) {         
+
+        if (reanalyze) {
             // reanalyze == true, set back to false
             // call model no matter what
             console.log("setting reanalyze = false")
             setReanalyze(false);
-        
+            /*axios.post(route, {
+                risk_level
+            })*/
+
         } else {
-            // search db for it first
-            var route = '/articles/stonks';
-            var response;
-            var notFound;
-
             // try to get article from db
-            axios.get(route)
-                .catch(err => {
-                    // error uncaught by the article router
-                    if(err.response) {
-                        console.log(err.response);        // body of error
-                        console.log(err.response.status); // error number
-                    }
-                })
-                .then(res => {
-                    // check for error returned by article router
-                    //console.log(res.data);
-                    
-                    if(res.data.error === null) {
-                        // no error; article successfully found
-                        console.log("article: " + res.data.article);
-                        setArticle(res.data.article); // dictionary
-                        notFound = false;
-
-                    } else if (res.data.error.status === 404) {
-                        console.log(404);
-                        notFound = true;
-                    }
-                });
-
-            console.log("notFound: " + notFound);
-            if (notFound) {
-                console.log("notFound: " + notFound);
-            }
-
-            /*
-            axios.get(route).then(res => {
-                console.log("getting article from db");
-                console.log(res.data);
-                // response = res;
-                if(res.data === "Article not found in database") {
-
-                    // **** insert call to model 
-    
-                    // hard-coded for now, in future use results from model
-                    rating = "90%";
-                    riskLevel = "green";
-                    timestamp = date.toUTCString();
-    
-                    // create new article in  db
-                    axios.post('/articles', {
-                        url: url,
-                        domain: domain,
-                        title: title,
-                        rating: rating,
-                        risk_level: riskLevel,
-                        timestamp: timestamp
-                    }).then(res => {
-                        setArticle(res.data);
-                        console.log(res.data);
-                    });
-    
-                } else {
-                    // article alrdy exists, just display the data from db
-                    setArticle(res.data);
+            axios.get('/articles/article', {
+                params: {
+                    url: url
+                }, 
+                cancelToken: source.token
+            }).catch(err => {
+                // User wishes to cancel
+                if (axios.isCancel(err)) {
+                    console.log('Request canceled', err.message);
                 }
-            });*/
+                // error uncaught by the article router
+                if(err.response) {
+                    console.log(err.response);        // body of error
+                    console.log(err.response.status); // error number
+                }
+            }).then(res => {
+                console.log(res.data)
+                // check for error returned by article router
+                //console.log(res.data);
+                if(res.data.error === null) {
+                    // no error; article successfully found
+                    console.log("article: " + res.data.article);
+                    setArticle(res.data.article); // dictionary
+                    //notFound = false;
 
-            
+                } else if (res.data.error.status === 404) {
+                    // article not found in db, make new article
+
+                    // pass url to model for analysis
+                    axios.get('/model', {
+                        params: {
+                            url: url
+                        }, 
+                        cancelToken: source.token
+
+                    // handle promise from GET request to model
+                    }).catch(err => {
+                        // User wishes to cancel
+                        if (axios.isCancel(err)) {
+                            console.log('Request canceled', err.message);
+                        }
+                    }).then(res => {
+                        // model returns dictionary with keys [results, range]
+                        var mResults = res.data.results;
+                        
+                        rating = mResults.range;
+
+                        // define risk level using range
+                        if (rating === "< 50%") {
+                            riskLevel = 2;
+                        } else if (rating === "60% - 75%") {
+                            riskLevel = 1;
+                        } else {
+                            riskLevel = 0;
+                        }
+
+                        timestamp = date.toUTCString();
+                        // post request to /articles
+                        axios.post('/articles', {
+                            url: url,
+                            domain: domain,
+                            title: title,
+                            rating: rating,
+                            reports: [],
+                            risk_level: riskLevel,
+                            timestamp: timestamp
+                        }, {
+                            cancelToken: source.token
+
+                        // handle promise from POST request to /articles
+                        }).catch(err => {
+                            // User wishes to cancel
+                            if (axios.isCancel(err)) {
+                                console.log('Request canceled', err.message);
+                            }
+                        }).then(res => {
+                            setArticle(res.data.article);
+                            console.log(res.data.article);
+                        });
+                    });
+                }
+            });
         }
+
+        // Add article to local storage
+        if (
+            typeof window !== "undefined"
+        ) {
+            let storedArticles = localStorage.getObj("articles")|| [];
+            storedArticles.push({
+                url,
+                domain,
+                rating,
+                riskLevel,
+                date
+            })
+            localStorage.setObj('articles', storedArticles);
+        }
+    }
+
+    // on click function to cancel the request for analysis
+    const handleCancel = event => {
+        source.cancel('Operation canceled by user.');
+        setModal(false);
     }
 
     const handleClick = event => setModal('show');
@@ -160,18 +207,20 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         <div>
             <h2 className='Header'>Getting your results now!</h2>
             <h4>Your URL is: {url}</h4>
+
+            <button onClick={onClick}>Parse</button>
+
+            <hr />
+
             <button className='CancelButton' onClick={handleClick}>Cancel</button>
-            
+
             <Link to='/results'>
                 <button className='ResultsButton'>Proceed to results</button>
             </Link>
 
-            <hr />
-            <button onClick={onClick}>Parse</button>
-
             <Modal show={modal === 'show'} onHide={handleClose} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirm Cancellation</Modal.Title>  
+                    <Modal.Title>Confirm Cancellation</Modal.Title>
                 </Modal.Header>
 
                 <Modal.Body>
@@ -182,12 +231,20 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
                 <Modal.Footer>
                     <Button variant='outline-secondary' onClick={handleClose}>Close</Button>
                     <Link to='/'>
-                        <Button variant='danger' onClick={handleClose}>Cancel</Button>
+                        <Button variant='danger' onClick={handleCancel}>Cancel</Button>
                     </Link>
                 </Modal.Footer>
             </Modal>
         </div>
     )
+}
+
+// Override default storage methods: setItem(), getItem
+Storage.prototype.setObj = function(key, obj) {
+    return this.setItem(key, JSON.stringify(obj))
+}
+Storage.prototype.getObj = function(key) {
+    return JSON.parse(this.getItem(key))
 }
 
 export default ProcessResults

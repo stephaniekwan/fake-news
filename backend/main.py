@@ -21,3 +21,7 @@ if __name__ == "__main__":
     # Dennis(To do): Investigate sometimes, livereload does not work
     server = Server(manager.run())
     server.serve()
+
+
+
+
