@@ -26,12 +26,13 @@ def get_all_reports():
         logging.error("An error occurred while retrieving reports")
         return sendError(500, "An error occurred while retrieving reports")
 
+
 @report_blueprint.route("/", methods=["POST"])
 def add_report():
     try:
         logging.info("Creating report...")
         report = request.get_json()
-        logging.info("report: \n" + json.dumps(report))
+        #logging.info("report: \n" + json.dumps(report))
         # no request provided
         if not report:
             logging.error("No request body provided")
@@ -55,10 +56,12 @@ def add_report():
         logging.error("Error creating new report")
         return sendError(500, "Error creating new report")
 
-@report_blueprint.route("/<user_id>/user", methods=["GET"])
-def get_report_by_user_id(user_id):
+# TODO: test this one? do we even need it -steph
+@report_blueprint.route("/user", methods=["GET"])
+def get_report_by_user_id():
     try:
         logging.info("Getting mutiple reports...")
+        user_id = request.args.get('user_id')
         report = reportService.get_report_by_user_id(user_id)
 
         # Report not in database
@@ -72,10 +75,12 @@ def get_report_by_user_id(user_id):
         logging.error("An error occurred while retrieving reports")
         return sendError(500, "An error occurred while retrieving reports")
 
-@report_blueprint.route("/<report_id>/report", methods=["GET"])
-def get_report_by_report_id(report_id):
+
+@report_blueprint.route("/report", methods=["GET"])
+def get_report_by_report_id():
     try:
-        logging.info("Getting single report...")
+        logging.info("Getting single report by its id...")
+        report_id = request.args.get('report_id')
         report = reportService.get_report_by_report_id(report_id)
 
         # Report not in database

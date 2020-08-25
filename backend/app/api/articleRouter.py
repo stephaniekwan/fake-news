@@ -30,7 +30,6 @@ def add_article():
     try:
         logging.info("Adding article...")
         article = request.get_json()
-        # print("article: \n", json.dumps(article))
         # No request provided
         if not article:
             logging.error("No request body provided")
@@ -54,9 +53,12 @@ def add_article():
 
 @article_blueprint.route('/article', methods=['GET'])
 def get_article():
-    article_url = request.args.get('url')
-    #article_url = article_url if article_url.endswith('/') else article_url + '/'
     try:
+        article_url = request.args.get('url')
+        if not article_url:
+            logging.error("No url provided")
+            return sendError(400, "No url provided as param")
+
         logging.info("Getting a single article...")
         article = articleService.get_article(article_url)
         if article == 'No such article':
@@ -67,25 +69,29 @@ def get_article():
         logging.error("Error retrieving article")
         return sendError(500, "Error retrieving article")
 
-# To do (dennis): We need to update this method after figuring out fields that need to be updated.
-@article_blueprint.route("/<article_url>", methods=["POST"])
-def update_article(article_url):
-    try:
-        logging.info("Getting request body...")
-        article = request.get_json()
 
-        if not article:
+@article_blueprint.route("/article", methods=["POST"])
+def update_article():
+    try: 
+        req = request.get_json()
+        if not req:
             logging.error("No request body provided")
             return sendError(400, "No request body provided")
 
-        logging.info("Updating a single article...")
-        article = articleService.update_article(article_url, article)
+        article_url = req['url']
+        rating = req['rating']
+        risk_level = req['risk_level']
+        timestamp = req['timestamp']
 
-        if article == 'No such document':
-            logging.error("Article not found in database")
+        logging.info("Received request fields, updating article...")
+        article = articleService.update_article(article_url, rating, 
+                                                risk_level, timestamp)
+        if article == 'No such article':
+            logging.error('Article not found in database')
             return sendError(404, "Article not found in database")
-
+        
+        logging.info("Article successfully updated")
         return { "article": article, "error": None }
     except:
-        logging.error("Error Updating article")
-        return sendError(500, "Error Updating article")
+        logging.error("Error updating article")
+        return sendError(500, "Error updating article")

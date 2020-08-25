@@ -5,11 +5,11 @@ from .articleService import get_article, articles_ref
 
 reports_ref = db.collection('reports')
 
+'''
+Gets all reports from the database with their unique report id
+@return dictionary form of all Report instances with a new report_id field
+'''
 def get_all_reports():
-    '''
-    Gets all reports from the database with their unique report id
-    @return dictionary form of all Report instances with a new report_id field
-    '''
     reports = []
 
     # for each report in the db
@@ -31,13 +31,11 @@ def get_all_reports():
 
     return reports
 
-
+'''
+Adds a new report to the database if it doesn't already exist
+@param report -- the report to be added
+'''
 def add_report(report):
-    '''
-    Adds a new report to the database if it doesn't already exist
-    @param report -- the report to be added
-    '''
-
     # TODO: (steph) what else to check for equivalence before deciding it is a duplicate?
         # check if comment is the same?
     # TODO: (steph) dont use user_id field to decide if duplicate
@@ -71,12 +69,12 @@ def add_report(report):
 
     return report
 
+'''
+Finds the multiple reports that matches the user_id
+@param user_id -- the reportID to search for
+'''
 def get_report_by_user_id(user_id):
-    '''
-    Finds the multiple reports that matches the user_id
-    @param user_id -- the reportID to search for
-    '''
-
+    #TODO: warning -- this will break 100% bc user id not in db
     # Get a multiple report that matches the user_id
     docs = reports_ref.where(u'user_id', u'==', user_id).stream()
 
@@ -90,14 +88,16 @@ def get_report_by_user_id(user_id):
 
     return reports
 
+'''
+Finds the single report that matches the report_id
+@param report_id -- the reportID to search for
+'''
 def get_report_by_report_id(report_id):
-    '''
-    Finds the single report that matches the report_id
-    @param report_id -- the reportID to search for
-    '''
-
     # Get a single report that matches the report_id
     doc_ref = reports_ref.document(report_id).get()
+
+    if not doc_ref.exists:
+        return 'No such document'
 
     print(f'Document data: {doc_ref.to_dict()}')
 
