@@ -58,7 +58,16 @@ const Router = () => {
                         )}
                     />
 
-                    <Route path='/report' exact component={Report} />
+                    <Route 
+                        exact 
+                        path='/report'
+                        render={(props) => (
+                            <Report
+                                {...props}
+                                url={url}
+                            />
+                        )}
+                    />
                 </Switch>
             </div>
         </BrowserRouter>

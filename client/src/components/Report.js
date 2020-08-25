@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '../styles/Report.css'
 import styled from 'styled-components';
 
-function Report(props) {
+function Report({url}) {
     const [validated, setValidated] = useState(false);
     const [modal, setModal] = useState('hide');
     // eslint-disable-next-line
@@ -75,12 +75,9 @@ function Report(props) {
                     <Form.Label>URL of Article</Form.Label>
                     <Form.Control
                         type="text"
-                        ref={elem => setURL(elem)}
-                        required as="textarea"
+                        placeholder={url}
+                        readOnly
                         rows="1"/>
-                    <Form.Control.Feedback type="invalid">
-                        Please provide a url.
-                    </Form.Control.Feedback>
                 </Form.Group>
                 {
                     // To do(Dennis): submit the user id by retrieving the user id from local storage without the user knowledge
