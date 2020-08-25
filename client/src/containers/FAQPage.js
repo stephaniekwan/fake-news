@@ -5,7 +5,7 @@ import '../styles/FAQPage.css';
 function FAQPage() {
     return (
         <>
-            <h1>faq page</h1>
+            <h3>Frequently Asked Questions</h3>
             <Collapsible trigger="What do my results mean?">
                 <p> The percentage displayed... </p>
             </Collapsible>
