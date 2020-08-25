@@ -1,9 +1,9 @@
 .Title {
     color: white;
     font-family: 'Times New Roman';
-    font-size: 50px;
+    font-size: 35px;
     text-align: center;
-    padding-left: 7%;
+    padding-right: 10px;
 }
 
 .Info {
@@ -13,12 +13,16 @@
 
 .centered {
     width: 100%;
-    
+
 }
 
 .right {
     float: right;
     padding: 10px;
+}
+
+.left {
+    padding-right: 10px;
 }
 
 .navbar {
