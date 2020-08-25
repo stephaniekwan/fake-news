@@ -29,7 +29,7 @@ const RenderArticles = ({isOrdered, articles}) => {
     return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
 };
 
-function PromptPage({onUrlChange}) {
+function MyArticle({onUrlChange}) {
     // eslint-disable-next-line
     const [articles, setArticles] = useState([]);
 
@@ -92,4 +92,4 @@ const HomeButtonWrapper = styled.div`
 const HomeButton = styled.input`
     width: 3rem;
 `;
-export default PromptPage;
+export default MyArticle;

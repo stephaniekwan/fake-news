@@ -24,7 +24,7 @@ const RenderReports = ({isOrdered, reports}) => {
     return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
 };
 
-function PromptPage({onUrlChange}) {
+function MyReport({onUrlChange}) {
     // eslint-disable-next-line
     const [reports, setReports] = useState([]);
 
@@ -93,4 +93,4 @@ const HomeButton = styled.input`
     width: 3rem;
 `;
 
-export default PromptPage;
+export default MyReport;
