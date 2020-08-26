@@ -1,5 +1,5 @@
 import joblib
-import datetime
+from datetime import datetime, timezone
 
 from app import webscraping
 from .articleService import add_article, update_article
@@ -25,6 +25,21 @@ def get_results(url):
     mResult = pred[0]
 
     # calculating percentage to assign to a range
+    
+    mAccuracy = pipeline.predict([clean_text])
+    print(mAccuracy)
+    mLen = len(mAccuracy)
+    if(mLen != 0):
+        if (mResult == 1):
+            mPerc = 0
+        elif (mResult == 0):
+            if(mAccuracy[0] == 'T'):
+                mPerc = 1
+            else:
+                mPerc = 2
+
+    
+    """
     mAccuracy = pipeline.predict([clean_text])
     if (pred[0] == 1):
         mPerc = 0
@@ -33,7 +48,7 @@ def get_results(url):
             mPerc = 2
         else:
             mPerc = 1
-    
+    """
     # Calculate the range.. somehow? TODO: send help KEKW
     if(mPerc == 0):
         mString = "< 50%"
@@ -42,20 +57,20 @@ def get_results(url):
     elif(mPerc == 2):
         mString = "> 80%"
 
-    return { 'headline': headline, 'result': dic[pred[0]], 'range': mString}
+    return { 'headline': headline, 'result': dic[pred[0]], 'rating': mString}
 
 
 def add_db_entry(url, domain, results):
     title = results['headline']
-    range = results['range']
-    risk_level = get_risk_level(range)
-    timestamp = datetime.datetime.now()
+    rating = results['rating']
+    risk_level = get_risk_level(rating)
+    timestamp = datetime.now(timezone.utc)
 
     article = add_article({
         "url": url,
         "domain": domain,
         "title": title,
-        "range": range,
+        "rating": rating,
         "risk_level": risk_level,
         "timestamp": timestamp,
         "reports": []
@@ -65,23 +80,23 @@ def add_db_entry(url, domain, results):
 
 
 def update_db_entry(url, results):
-    range = results['range']
-    risk_level = get_risk_level(range)
-    timestamp = datetime.datetime.now()
+    rating = results['rating']
+    risk_level = get_risk_level(rating)
+    timestamp = datetime.now(timezone.utc)
 
     # how to get a formatted string version of the datetime object
     print(timestamp.strftime('%c'))
 
-    article = update_article(url, range, risk_level, timestamp)
+    article = update_article(url, rating, risk_level, timestamp)
     return article
 
 
-def get_risk_level(range):
-    if range == "> 80%":
+def get_risk_level(rating):
+    if rating == "> 80%":
         return 0
-    elif range == "60% - 75%":
+    elif rating == "60% - 75%":
         return 1
-    elif range == "< 50%":
+    elif rating == "< 50%":
         return 2
 
-#print(get_results("https://www.cnn.com/2020/08/24/politics/vance-trump-taxes-subpoena/index.html"))
+print(get_results("https://www.cnn.com/2020/08/24/politics/vance-trump-taxes-subpoena/index.html"))

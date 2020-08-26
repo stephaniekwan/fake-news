@@ -86,8 +86,8 @@ def update_article():
         logging.info("Received request fields, updating article...")
         article = articleService.update_article(article_url, rating, 
                                                 risk_level, timestamp)
-        if article == 'No such article':
-            logging.error('Article not found in database')
+        if article == "No such article":
+            logging.error("Article not found in database")
             return sendError(404, "Article not found in database")
         
         logging.info("Article successfully updated")
@@ -95,3 +95,27 @@ def update_article():
     except:
         logging.error("Error updating article")
         return sendError(500, "Error updating article")
+
+@article_blueprint.route("/domain", methods=["GET"])
+def check_domain():
+    try:
+        domain = request.args.get("domain")
+        if not domain:
+            logging.error("No domain was provided")
+            return sendError(400, "No domain was provided")
+
+        logging.info("Request for checking domain received, querying db...")
+        risk = articleService.check_domain(domain)
+
+        if risk == "Domain not found":
+            logging.error("Domain not found in db")
+            return sendError(404, "Domain not found in db")
+
+        # valid outputs
+        if risk == "risky" or risk == "safe":
+            logging.info("Domain has been checked, returning results")
+            return { "risk": risk, "error": None }
+
+    except:
+        logging.error("Error checking the domain")
+        return sendError(500, "Error checking the domain")

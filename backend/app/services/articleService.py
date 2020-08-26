@@ -89,3 +89,37 @@ def update_article(article_url, rating, risk_level, timestamp):
     doc = doc_ref.get()
 
     return doc.to_dict()
+
+'''
+This function is used for checking how many articles are from the same domain that
+are predicted to be <80% true
+@param domain -- the domain to query for
+@return 'risky' if there are at least 3 risky documents from the same domain
+        else 'safe'
+'''
+def check_domain(domain):
+    # for testing: www.cnn.com has 3 risky articles
+    # query db
+    docs = articles_ref.where('domain', '==', domain).stream()
+
+    # list for storing the dictionary form of all the documents
+    docsList = []
+
+    # counter for how many total documents were found in the query
+    numDocs = 0
+
+    for doc in docs:
+        numDocs += 1
+        doc = doc.to_dict()
+        # if rating is < 80%, we will count as risky
+        if doc['rating'] != '> 80%':
+            docsList.append(doc)
+            #print(doc)
+
+    if numDocs == 0:
+        return 'Domain not found'
+    elif len(docsList) >= 3:
+        return 'risky'
+    else:
+        return 'safe'
+
