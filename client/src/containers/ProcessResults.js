@@ -3,7 +3,6 @@ import { Modal, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import ParseDomain from '../utils/ParseDomain';
-import ParseTitle from '../utils/ParseTitle';
 import '../styles/ProcessResults.css';
 //import getTitleAtUrl from 'get-title-at-url';
 //var getTitleAtUrl = require('get-title-at-url');
@@ -37,7 +36,7 @@ import '../styles/ProcessResults.css';
  *  - setReanalyze: allows ProcessResults.js to set var back to false once reanalysis done
  *  - setArticle: pass the article to parent component so Results.js can display
  */
-function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
+function ProcessResults( {url, reanalyze, setReanalyze, setArticle, setLastAnalyzed} ) {
     const [modal, setModal] = useState('hide');
 
     // axios API for cancelling requests
@@ -46,20 +45,9 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
 
     // used to save other values needed for POST request to db
     var domain = "";
-    var title = "placeholder";
     var rating = "";
     var riskLevel = 0;
-    var timestamp = null;
     var date = new Date();
-
-    /*
-    useEffect(() => {
-        // https://www.npmjs.com/package/article-title  || dunno if this will work for title
-        // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }, [domain, title, url, date]);
-    */
-
-    //url = "https://www.nbcnews.com/news/amp/ncna1236249";
 
     const onClick = event => {
 
@@ -70,112 +58,36 @@ function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
         console.log("parsedDomain: " + parsedDomain);
         console.log("domain: " + domain);
 
-        /*
-        var parsedTitle = ParseTitle(url);
-        if (parsedTitle !== "Empty url provided") {
-            title = parsedTitle;
-        }
-        //why the fuck do you not EXIST REEEEEEEEEEEEEEEEE
-        //; -; ill cry
-        console.log("parsedTitle: "+ parsedTitle);
-        console.log("title: " + title);*/
-
         console.log("reanalyze: " + reanalyze);
 
-        if (reanalyze) {
-            // reanalyze == true, set back to false
-            // call model no matter what
-            console.log("setting reanalyze = false")
-            setReanalyze(false);
-            /*axios.post(route, {
-                risk_level
-            })*/
+        axios.get('/model', {
+            params: {
+                url: url,
+                domain: domain,
+                reanalyze: reanalyze
+            },
+            cancelToken: source.token
 
-        } else {
-            // try to get article from db
-            axios.get('/articles/article', {
-                params: {
-                    url: url
-                }, 
-                cancelToken: source.token
-            }).catch(err => {
-                // User wishes to cancel
-                if (axios.isCancel(err)) {
-                    console.log('Request canceled', err.message);
-                }
-                // error uncaught by the article router
-                if(err.response) {
-                    console.log(err.response);        // body of error
-                    console.log(err.response.status); // error number
-                }
-            }).then(res => {
-                console.log(res.data)
-                // check for error returned by article router
-                //console.log(res.data);
-                if(res.data.error === null) {
-                    // no error; article successfully found
-                    console.log("article: " + res.data.article);
-                    setArticle(res.data.article); // dictionary
-                    //notFound = false;
+        }).catch(err => {
+            // User wishes to cancel
+            if (axios.isCancel(err)) {
+                console.log('Request canceled', err.message);
+            }
 
-                } else if (res.data.error.status === 404) {
-                    // article not found in db, make new article
+        }).then(res => {
+            if (reanalyze) {
+                console.log("setting reanalyze = false")
+                setReanalyze(false);
+            }
+            console.log(res.data);
+            setArticle(res.data.article);
+            setLastAnalyzed(res.data.last_analyzed);
 
-                    // pass url to model for analysis
-                    axios.get('/model', {
-                        params: {
-                            url: url
-                        }, 
-                        cancelToken: source.token
-
-                    // handle promise from GET request to model
-                    }).catch(err => {
-                        // User wishes to cancel
-                        if (axios.isCancel(err)) {
-                            console.log('Request canceled', err.message);
-                        }
-                    }).then(res => {
-                        // model returns dictionary with keys [results, range]
-                        var mResults = res.data.results;
-                        
-                        rating = mResults.range;
-
-                        // define risk level using range
-                        if (rating === "< 50%") {
-                            riskLevel = 2;
-                        } else if (rating === "60% - 75%") {
-                            riskLevel = 1;
-                        } else {
-                            riskLevel = 0;
-                        }
-
-                        timestamp = date.toUTCString();
-                        // post request to /articles
-                        axios.post('/articles', {
-                            url: url,
-                            domain: domain,
-                            title: title,
-                            rating: rating,
-                            reports: [],
-                            risk_level: riskLevel,
-                            timestamp: timestamp
-                        }, {
-                            cancelToken: source.token
-
-                        // handle promise from POST request to /articles
-                        }).catch(err => {
-                            // User wishes to cancel
-                            if (axios.isCancel(err)) {
-                                console.log('Request canceled', err.message);
-                            }
-                        }).then(res => {
-                            setArticle(res.data.article);
-                            console.log(res.data.article);
-                        });
-                    });
-                }
-            });
-        }
+            // set constants for localstorage
+            rating = res.data.article.rating;
+            riskLevel = res.data.article.risk_level;
+            date = date.toUTCString();
+        })
 
         // Add article to local storage
         if (

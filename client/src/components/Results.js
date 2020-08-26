@@ -1,8 +1,6 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
-import axios from "axios";
 import "../styles/Results.css";
-import PickColor from "../utils/PickColor";
 
 /*
  * Params:
@@ -28,15 +26,22 @@ import PickColor from "../utils/PickColor";
  *      }
  *
  */
-function Results({setReanalyze, article}) {
+function Results({setReanalyze, article, lastAnalyzed}) {
     const [articles, setArticles] = useState(0);
-    /*
-  useEffect(() => {
-    axios.get('/articles').then(response => {
-      setArticles(response.data.articles);
-    });
-  }, []);*/
 
+    const days = lastAnalyzed[0];
+    const hours = lastAnalyzed[1];
+    const mins = lastAnalyzed[2];
+    const secs = lastAnalyzed[3];
+
+    /*
+    useEffect(() => {
+        axios.get('/articles').then(response => {
+        setArticles(response.data.articles);
+        });
+    }, []);*/
+
+  /*
     // Default article upon failure
     article = article = {
         url: "test url",
@@ -53,7 +58,7 @@ function Results({setReanalyze, article}) {
         if (recentArticles.length > 0) {
             article = recentArticles[recentArticleIdx];
         }
-    }
+    }*/
     var rating = article["rating"];
     var riskLevel;
     var color;
@@ -88,11 +93,14 @@ function Results({setReanalyze, article}) {
                     Our analysis finds this article to be about {rating} factually accurate. You are at{" "}
                     {riskLevel} risk of being exposed to false information.
                 </p>
+                <p>
+                    Your article was last analyzed {days} days, {hours} hours, {mins} minutes,
+                    and {secs} seconds ago.
+                </p>
                 <p class='body'>Disagree with your results?</p>
-
                 <Link to='/processing'>
                     <button onClick={handleClick} class='button'>
-                        Renanalyze Article
+                        Reanalyze Article
                     </button>
                 </Link>
                 <Link to='/report'>

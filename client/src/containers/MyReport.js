@@ -31,10 +31,20 @@ function MyReport({onUrlChange}) {
     useEffect(() => {
         let user_id = "2";
         if (typeof window !== "undefined" && user_id) {
-            axios(`reports/${user_id}/user`).then((response) => {
+            axios(`reports/${user_id}/user`)
+            .then((response) => {
                 console.log(response);
                 setReports(response.data.report);
             });
+            /*
+            axios(`reports/${user_id}/user`)
+            .catch(err => {
+                console.log(err);
+            })
+            .then((response) => {
+                console.log(response);
+                setReports(response.data.report);
+            });*/
         }
     }, []);
 

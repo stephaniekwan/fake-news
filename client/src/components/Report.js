@@ -25,8 +25,8 @@ function Report({url}) {
     });
 
     // used to save user input from the form
-    const [urlInput, setURL] = useState("");
-    const [userIDInput, setUserID] = useState("");
+    //const [urlInput, setURL] = useState("");
+    //const [userIDInput, setUserID] = useState("");
     const [tagInput, setTag] = useState("");
     const [commentInput, setComment] = useState("");
 
@@ -34,8 +34,7 @@ function Report({url}) {
         if (modal === 'submitted') {
             setModal('done')
             axios.post('/reports', {
-                url: urlInput.value,
-                user_id: userIDInput.value,
+                url: url,
                 tag: tagInput.value,
                 comment: commentInput.value
             }).then(res => {
@@ -44,7 +43,7 @@ function Report({url}) {
         }
         setModal('done');
 
-    }, [modal, urlInput.value, userIDInput.value, tagInput.value, commentInput.value]);
+    }, [modal, url, tagInput.value, commentInput.value]);
 
     const handleSubmit = event => {
         const form = event.currentTarget;
