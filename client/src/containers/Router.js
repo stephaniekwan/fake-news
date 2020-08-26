@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from "react";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import {BrowserRouter, Route, Switch, Redirect} from "react-router-dom";
+import {LastLocationProvider} from "react-router-last-location";
+
 //import axios from 'axios';
 
 import NavBar from "./NavBar";
@@ -19,7 +21,7 @@ const Router = () => {
     const [url, setUrl] = useState(defaultUrl);
     const [reanalyze, setReanalyze] = useState(false);
     const [article, setArticle] = useState(null);
-    const [lastAnalyzed, setLastAnalyzed] = useState(null)
+    const [lastAnalyzed, setLastAnalyzed] = useState(null);
 
     /*
     useEffect(() => {
@@ -37,59 +39,57 @@ const Router = () => {
 
     return (
         <BrowserRouter>
-            <div className='App' id='main-component'>
-                <NavBar />
-                <Switch>
-                    <Route
-                        exact
-                        path='/'
-                        render={(props) => <PromptPage {...props} onUrlChange={setUrl} />}
-                    />
+            <LastLocationProvider>
+                <div className='App' id='main-component'>
+                    <NavBar />
+                    <Switch>
+                        <Route
+                            exact
+                            path='/'
+                            render={(props) => <PromptPage {...props} onUrlChange={setUrl} />}
+                        />
 
-                    <Route path='/faq' exact component={FAQPage} />
+                        <Route path='/faq' exact component={FAQPage} />
 
-                    <Route
-                        exact
-                        path='/processing'
-                        render={(props) => (
-                            <ProcessResults
-                                {...props}
-                                url={url}
-                                reanalyze={reanalyze}
-                                setReanalyze={setReanalyze}
-                                setArticle={setArticle}
-                                setLastAnalyzed={setLastAnalyzed}
-                            />
-                        )}
-                    />
-                    <Route exact path='/myreport' render={(props) => <MyReport {...props} />} />
+                        <Route
+                            exact
+                            path='/processing'
+                            render={(props) => (
+                                <ProcessResults
+                                    {...props}
+                                    url={url}
+                                    reanalyze={reanalyze}
+                                    setReanalyze={setReanalyze}
+                                    setArticle={setArticle}
+                                    setLastAnalyzed={setLastAnalyzed}
+                                />
+                            )}
+                        />
+                        <Route exact path='/myreport' render={(props) => <MyReport {...props} />} />
 
-                    <Route exact path='/myarticle' render={(props) => <MyArticle {...props} />} />
+                        <Route exact path='/myarticle' render={(props) => <MyArticle {...props} />} />
 
-                    <Route
-                        exact
-                        path='/results'
-                        render={(props) => (
-                            <Results {...props} 
-                                setReanalyze={setReanalyze} 
-                                article={article} 
-                                lastAnalyzed={lastAnalyzed} 
-                            />
-                        )}
-                    />
+                        <Route
+                            exact
+                            path='/results'
+                            render={(props) => (
+                                <Results
+                                    {...props}
+                                    setReanalyze={setReanalyze}
+                                    article={article}
+                                    lastAnalyzed={lastAnalyzed}
+                                />
+                            )}
+                        />
 
-                    <Route 
-                        exact 
-                        path='/report'
-                        render={(props) => (
-                            <Report
-                                {...props}
-                                url={url}
-                            />
-                        )}
-                    />
-                </Switch>
-            </div>
+                        <Route
+                            exact
+                            path='/report'
+                            render={(props) => <Report {...props} url={url} />}
+                        />
+                    </Switch>
+                </div>
+            </LastLocationProvider>
         </BrowserRouter>
     );
 };
