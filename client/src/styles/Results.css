@@ -39,13 +39,15 @@
 
 .button {
   border: none;
-  color: #525252;
-  padding: 15px 32px;
+  background: #90D4D9;
+  color: #464646;
+  padding: 15px 30px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
+  margin: 10px 10px;
+  border-radius: 4px;
   cursor: pointer;
 }
 
@@ -53,4 +55,8 @@
   height: 50px;
   width: 50px;
   border-radius: 50%;
+}
+
+.body {
+  font-size: 20px;
 }

@@ -26,7 +26,7 @@ import "../styles/Results.css";
  *      }
  *
  */
-function Results({setReanalyze, article, lastAnalyzed}) {
+function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
     const [articles, setArticles] = useState(0);
 
     const days = lastAnalyzed[0];
@@ -34,6 +34,13 @@ function Results({setReanalyze, article, lastAnalyzed}) {
     const mins = lastAnalyzed[2];
     const secs = lastAnalyzed[3];
 
+    // set up message to display if the article was pulled from the database
+    var fromDatabase = "";
+    if (fromDB) {
+        fromDatabase = "The results for this article were pulled from our database \
+                        and thus your results may be inaccurate depending on how \
+                        long ago the article was analyzed. "
+    }
     /*
     useEffect(() => {
         axios.get('/articles').then(response => {
@@ -89,24 +96,26 @@ function Results({setReanalyze, article, lastAnalyzed}) {
                 <img src='./assets/logo-small.png' className='App-logo' alt='logo' />
                 <h1>Fake News Detector</h1>
                 <div style={{backgroundColor: color}} class='circle'></div>
-                <p class='body'>
+                <p className='body'>
                     Our analysis finds this article to be about {rating} factually accurate. You are at{" "}
                     {riskLevel} risk of being exposed to false information.
                 </p>
-                <p>
+                <p className='body'>
+                    {fromDatabase}
+                </p>
+                <p className='body'>
                     Your article was last analyzed {days} days, {hours} hours, {mins} minutes,
                     and {secs} seconds ago.
                 </p>
-                <p class='body'>Disagree with your results?</p>
+                <p className='body'>Disagree with your results?</p>
                 <Link to='/processing'>
                     <button onClick={handleClick} class='button'>
                         Reanalyze Article
                     </button>
                 </Link>
                 <Link to='/report'>
-                    <button class='button'>Make a Report</button>
+                    <button className='button'>Make a Report</button>
                 </Link>
-
                 <p>Related Low Risk Articles:</p>
                 <a href='https://google.com' target='_blank' rel='noopener noreferrer'>
                     Related Article #1

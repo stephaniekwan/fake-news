@@ -36,7 +36,7 @@ import "../styles/ProcessResults.css";
  *  - setReanalyze: allows ProcessResults.js to set var back to false once reanalysis done
  *  - setArticle: pass the article to parent component so Results.js can display
  */
-function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyzed}) {
+function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyzed, setFromDB}) {
     const [modal, setModal] = useState("hide");
     const lastLocation = useLastLocation();
 
@@ -84,8 +84,9 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
                     setReanalyze(false);
                 }
                 console.log(res.data);
-                setArticle(res.data.article);
-                setLastAnalyzed(res.data.last_analyzed);
+                setArticle(res.data.article);               // dictionary
+                setLastAnalyzed(res.data.last_analyzed);    // array
+                setFromDB(res.data.pulled_from_db);         // boolean
 
                 // set constants for localstorage
                 rating = res.data.article.rating;

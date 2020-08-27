@@ -32,7 +32,6 @@ def get_results():
     if isinstance(reanalyze, str):
         reanalyze = reanalyze.strip()
 
-    # this block has been tested
     if reanalyze.lower() == 'true' or reanalyze == True:
         logging.info("Params received, getting results from model...")
         results = modelService.get_results(url)
@@ -47,6 +46,7 @@ def get_results():
 
         return {"article": article, 
                 "last_analyzed": [0, 0, 0, 0],  # days, hrs, min, sec
+                "pulled_from_db": False,
                 "error": None}
 
     else: # reanalyze = FALSE
@@ -70,9 +70,12 @@ def get_results():
             mins, secs = divmod(secs, 60)             # returns tuple: (mins, seconds)
 
             last_analyzed = [diff.days, hours, mins, secs]
-            print("last analyzed: ", last_analyzed)
 
-            return { "article": existing, "last_analyzed": last_analyzed, "error": None}
+            logging.info("Article found in database, returning results")
+            return { "article": existing, 
+                     "last_analyzed": last_analyzed, 
+                     "pulled_from_db": True,
+                     "error": None}
 
         else:
             # article not found in db, need to add an article
@@ -91,6 +94,7 @@ def get_results():
             logging.info("Article successfully added to db")
             return {"article": article, 
                     "last_analyzed": [0, 0, 0, 0],  # days, hrs, min, sec
+                    "pulled_from_db": False,
                     "error": None}
 
         # else (FALSE)

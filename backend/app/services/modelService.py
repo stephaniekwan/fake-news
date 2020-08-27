@@ -99,4 +99,4 @@ def get_risk_level(rating):
     elif rating == "< 50%":
         return 2
 
-print(get_results("https://www.cnn.com/2020/08/24/politics/vance-trump-taxes-subpoena/index.html"))
+#print(get_results("https://www.cnn.com/2020/08/24/politics/vance-trump-taxes-subpoena/index.html"))

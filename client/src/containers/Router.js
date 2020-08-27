@@ -22,6 +22,7 @@ const Router = () => {
     const [reanalyze, setReanalyze] = useState(false);
     const [article, setArticle] = useState(null);
     const [lastAnalyzed, setLastAnalyzed] = useState(null);
+    const [fromDB, setFromDB] = useState(false);
 
     /*
     useEffect(() => {
@@ -62,6 +63,7 @@ const Router = () => {
                                     setReanalyze={setReanalyze}
                                     setArticle={setArticle}
                                     setLastAnalyzed={setLastAnalyzed}
+                                    setFromDB={setFromDB}
                                 />
                             )}
                         />
@@ -78,6 +80,7 @@ const Router = () => {
                                     setReanalyze={setReanalyze}
                                     article={article}
                                     lastAnalyzed={lastAnalyzed}
+                                    fromDB={fromDB}
                                 />
                             )}
                         />
