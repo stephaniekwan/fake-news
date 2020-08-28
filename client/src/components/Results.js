@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
+import {useLastLocation} from "react-router-last-location";
 import "../styles/Results.css";
 
 /*
@@ -28,6 +29,11 @@ import "../styles/Results.css";
  */
 function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
     const [articles, setArticles] = useState(0);
+    const lastLocation = useLastLocation();
+
+    if (!lastLocation || lastLocation.pathname !== "/") {
+        window.location.href = "/";
+    }
 
     const days = lastAnalyzed[0];
     const hours = lastAnalyzed[1];
