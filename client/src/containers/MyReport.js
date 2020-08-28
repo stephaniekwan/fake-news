@@ -29,7 +29,7 @@ function MyReport({onUrlChange}) {
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
-        let user_id = "2";
+        let user_id = localStorage.getItem('user_id');
         if (typeof window !== "undefined" && user_id) {
             axios(`reports/${user_id}/user`)
             .then((response) => {
