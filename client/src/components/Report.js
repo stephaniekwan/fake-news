@@ -66,18 +66,18 @@ function Report({url}) {
 
     return (
         <ReportForm>
-            <h1>Report an error</h1>
-            <h3>Disagree with your results? Let us know what you think!</h3>
+            <h1 className="ReportHeader">Report an Error</h1>
+            <h3 className="ReportHeader">Disagree with your results? Let us know what you think!</h3>
             <Form noValidate validated={validated} onSubmit={handleSubmit}>
                 <Form.Group controlId='reportForm.Url'>
-                    <Form.Label>URL of Article</Form.Label>
+                    <Form.Label className="FormLabel">URL of Article</Form.Label>
                     <Form.Control type='text' placeholder={url} readOnly rows='1' />
                 </Form.Group>
                 {
                     // To do(Dennis): submit the user id by retrieving the user id from local storage without the user knowledge
                 }
                 <Form.Group controlId='reportForm.Tag'>
-                    <Form.Label>Select which of the following applies:</Form.Label>
+                    <Form.Label className="FormLabel">Select which of the following applies:</Form.Label>
                     <Form.Control ref={(elem) => setTag(elem)} required as='select'>
                         <option>I think this article is actually mostly true</option>
                         <option>I think this article is actually mostly false</option>
@@ -88,7 +88,7 @@ function Report({url}) {
                 </Form.Group>
 
                 <Form.Group controlId='reportForm.Comment'>
-                    <Form.Label>Feedback</Form.Label>
+                    <Form.Label className="FormLabel">Feedback</Form.Label>
                     <Form.Control
                         ref={(elem) => setComment(elem)}
                         as='textarea'

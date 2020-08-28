@@ -36,15 +36,14 @@ function PromptPage( {onUrlChange} ) {
 
     return (
         <div className='App'>
-            <h1 className='Header'>Prompt Page: S T O N K S</h1>
-            <h2 className='Subheader'>Fake News Detector</h2>
+            <h2 className='Header'>Fake News Detector</h2>
             <h4 className='Prompt'>
                 Want to know what percentage of your content is likely to be false?
             </h4>
 
             <Form onSubmit={handleSubmit}>
                 <PromptForm controlId="urlInput">
-                    <Form.Label>Enter the URL of your article.</Form.Label>
+                    <Form.Label className="formLabel">Enter the URL of your article:</Form.Label>
                     <UrlInput
                         type="textarea"
                         onChange={handleChange}

@@ -114,14 +114,18 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
                     and {secs} seconds ago.
                 </p>
                 <p className='body'>Disagree with your results?</p>
-                <Link to='/processing'>
-                    <button onClick={handleClick} class='button'>
-                        Reanalyze Article
-                    </button>
-                </Link>
-                <Link to='/report'>
-                    <button className='button'>Make a Report</button>
-                </Link>
+                <div className="buttons">
+                  <Link to='/processing'>
+                      <button onClick={handleClick} class='button'>
+                          Reanalyze Article
+                          </button>
+                  </Link>
+                  <Link to='/report'>
+                      <button className='button'>
+                          Make a Report
+                      </button>
+                  </Link>
+                </div>
                 <p>Related Low Risk Articles:</p>
                 <a href='https://google.com' target='_blank' rel='noopener noreferrer'>
                     Related Article #1

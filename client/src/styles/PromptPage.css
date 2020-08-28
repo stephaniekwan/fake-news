@@ -2,7 +2,7 @@
     justify-content: center;
     align-items: center;
     height: 200px;
-    font-family: 'Georgia';
+    font-family: 'Apple Chancery';
 }
 
 .analyzeButton {
@@ -10,9 +10,9 @@
     border: 2px solid #90D4D9;
     border-radius: 8px;
     border-width: medium;
-    padding: 20px 40px;
+    padding: 25px 35px;
     font-size: 40px;
-    font-family: 'Times','Wingdings 3';
+    font-family: 'Apple Chancery';
     text-align: center;
     transition-duration: 0.4s;
 }
@@ -25,4 +25,13 @@
     background-color: #90D4D9;
     box-shadow: 0 5px #666;
     transform: translateY(4px);
+}
+
+.Header {
+    padding-top: 15px;
+}
+
+.formLabel {
+    font-size: 20px;
+    color: #00CED1;
 }

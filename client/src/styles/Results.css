@@ -1,5 +1,6 @@
 .App {
-  text-align: center;
+    font-family: 'Apple Chancery';
+    text-align: center;
 }
 
 .App-logo {
@@ -14,7 +15,7 @@
 }
 
 .App-header {
-  background-color: navy;
+  background-color: #7797c9;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -25,7 +26,7 @@
 }
 
 .App-link {
-  color: #61dafb;
+  color: #00CED1;
 }
 
 @keyframes App-logo-spin {
@@ -49,6 +50,10 @@
   margin: 10px 10px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.buttons {
+    align-items: left;
 }
 
 .circle {

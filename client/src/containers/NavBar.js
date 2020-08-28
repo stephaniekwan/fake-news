@@ -42,7 +42,7 @@ export default () => {
                     </div>
                     <div className='centered'>
                         <Link to='/'>
-                            <h1 className='Title'>S T O N K S</h1>
+                            <h1 className='Title'>APATE</h1>
                         </Link>
                     </div>
                     <div className='right'>

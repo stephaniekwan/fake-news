@@ -6,7 +6,7 @@
     padding: 10px 20px;
     margin: 20px;
     font-size: 20px;
-    font-family: 'Times','Wingdings 3';
+    font-family: 'Apple Chancery';
     text-align: center;
     transition-duration: 0.4s;
 }
@@ -29,14 +29,14 @@
     padding: 10px 20px;
     margin: 20px;
     font-size: 20px;
-    font-family: 'Times','Wingdings 3';
+    font-family: 'Apple Chancery';
     text-align: center;
     transition-duration: 0.4s;
 }
 
 .CancelButton:hover {
     background-color: #fa7377;
-} 
+}
 
 .CancelButton:active {
     background-color: #fa7377;
