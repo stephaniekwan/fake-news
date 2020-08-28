@@ -31,7 +31,7 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
     const [articles, setArticles] = useState(0);
     const lastLocation = useLastLocation();
 
-    if (!lastLocation || lastLocation.pathname !== "/") {
+    if (!lastLocation || lastLocation.pathname !== "/processing") {
         window.location.href = "/";
     }
 
