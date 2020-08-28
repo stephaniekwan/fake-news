@@ -7,6 +7,7 @@ import styled from "styled-components";
 
 const RenderReports = ({isOrdered, reports}) => {
     if (!reports) return null;
+    if (reports.length === 0) return <div>Reports not found.</div>;
 
     const list = reports.map((report, i) => (
         <Card key={`${i}_${report.user_id}`}>
