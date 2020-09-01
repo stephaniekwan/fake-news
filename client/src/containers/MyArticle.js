@@ -6,6 +6,7 @@ import styled from "styled-components";
 
 const RenderArticles = ({isOrdered, articles}) => {
     if (!articles) return null;
+    if (articles.length === 0) return <div>Articles not found.</div>;
 
     const list = articles.map((article, i) => (
         <Card key={i}>

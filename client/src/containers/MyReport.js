@@ -30,13 +30,20 @@ function MyReport({onUrlChange}) {
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
-        let user_id = localStorage.getItem('user_id');
+        let user_id = localStorage.getItem("user_id");
+        let error;
         if (typeof window !== "undefined" && user_id) {
             axios(`reports/${user_id}/user`)
-            .then((response) => {
-                console.log(response);
-                setReports(response.data.report);
-            });
+                .then((response) => {
+                    setReports(response.data.report);
+                })
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        console.error(`${err.response.config.url} not found`);
+                    }
+                    throw err;
+                });
+
             /*
             axios(`reports/${user_id}/user`)
             .catch(err => {
