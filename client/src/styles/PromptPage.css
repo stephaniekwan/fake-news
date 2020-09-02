@@ -1,8 +1,10 @@
+@import url('https://fonts.googleapis.com/css?family=Vollkorn');
+
 .App {
     justify-content: center;
     align-items: center;
     height: 200px;
-    font-family: 'Apple Chancery';
+    font-family: 'Vollkorn';
 }
 
 .analyzeButton {
@@ -12,7 +14,7 @@
     border-width: medium;
     padding: 25px 35px;
     font-size: 40px;
-    font-family: 'Apple Chancery';
+    font-family: 'Vollkorn';
     text-align: center;
     transition-duration: 0.4s;
 }

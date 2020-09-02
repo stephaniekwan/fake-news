@@ -31,7 +31,7 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
     const [articles, setArticles] = useState(0);
     const lastLocation = useLastLocation();
 
-    if (!lastLocation || (lastLocation.pathname !== "/processing" && 
+    if (!lastLocation || (lastLocation.pathname !== "/processing" &&
             lastLocation.pathname !== '/report')) {
         window.location.href = "/";
     }
@@ -104,7 +104,7 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
     return (
         <div className='App'>
             <header className='App-header'>
-                <img src='./assets/logo-small.png' className='App-logo' alt='logo' />
+                <img src='./assets/logo-small2.png' className='App-logo' alt='logo' />
                 <h1>Fake News Detector</h1>
                 <div style={{backgroundColor: color}} class='circle'></div>
                 <p className='body'>
