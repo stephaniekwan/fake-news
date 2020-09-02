@@ -33,7 +33,7 @@ function MyReport({onUrlChange}) {
         let user_id = localStorage.getItem("user_id");
         let error;
         if (typeof window !== "undefined" && user_id) {
-            axios(`reports/${user_id}/user`)
+            axios(`reports/user?user_id=${user_id}`)
                 .then((response) => {
                     setReports(response.data.report);
                 })
