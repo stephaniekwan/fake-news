@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {useLastLocation} from "react-router-last-location";
 import {Modal, Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import axios from "axios";
 import ParseDomain from "../utils/ParseDomain";
 import "../styles/ProcessResults.css";
@@ -39,6 +39,7 @@ import "../styles/ProcessResults.css";
 function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyzed, setFromDB}) {
     const [modal, setModal] = useState("hide");
     const lastLocation = useLastLocation();
+    const [goToResults, setGoToResults] = useState(false);
 
     if ((!lastLocation || lastLocation.pathname !== "/") && !reanalyze) {
         window.location.href = "/";
@@ -79,14 +80,15 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
                 //    console.log("setting reanalyze = false");
                 //}
                 console.log(res.data);
-                setArticle(res.data.article);               // dictionary
-                setLastAnalyzed(res.data.last_analyzed);    // array
-                setFromDB(res.data.pulled_from_db);         // boolean
+                setArticle(res.data.article); // dictionary
+                setLastAnalyzed(res.data.last_analyzed); // array
+                setFromDB(res.data.pulled_from_db); // boolean
 
                 // set constants for localstorage
                 rating = res.data.article.rating;
                 riskLevel = res.data.article.risk_level;
                 date = date.toUTCString();
+                setGoToResults(true);
             });
 
         // Add article to local storage
@@ -116,45 +118,46 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
     //{!lastLocation || lastLocation.pathname !== "/" ? null : (
     return (
         <div>
-                <div>
-                    <h2 className='Header'>Getting your results now!</h2>
-                    <h4>Your URL is: {url}</h4>
+            {goToResults ? <Redirect to='/results' /> : null}
+            <div>
+                <h2 className='Header'>Getting your results now!</h2>
+                <h4>Your URL is: {url}</h4>
+                {/* Remove this to simplify the processing page and avoid potential confusions */}
+                {/* <button onClick={onClick}>Parse</button> */}
 
-                    <button onClick={onClick}>Parse</button>
+                <hr />
 
-                    <hr />
+                <button className='CancelButton' onClick={handleClick}>
+                    Cancel
+                </button>
 
-                    <button className='CancelButton' onClick={handleClick}>
-                        Cancel
-                    </button>
+                <button className='ResultsButton' onClick={onClick}>
+                    Proceed to results
+                </button>
 
-                    <Link to='/results'>
-                        <button className='ResultsButton'>Proceed to results</button>
-                    </Link>
+                <Modal show={modal === "show"} onHide={handleClose} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirm Cancellation</Modal.Title>
+                    </Modal.Header>
 
-                    <Modal show={modal === "show"} onHide={handleClose} centered>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Confirm Cancellation</Modal.Title>
-                        </Modal.Header>
+                    <Modal.Body>
+                        <p>URL: {url}</p>
+                        <p>Are you sure you want to cancel the analysis?</p>
+                    </Modal.Body>
 
-                        <Modal.Body>
-                            <p>URL: {url}</p>
-                            <p>Are you sure you want to cancel the analysis?</p>
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button variant='outline-secondary' onClick={handleClose}>
-                                Close
+                    <Modal.Footer>
+                        <Button variant='outline-secondary' onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Link to='/'>
+                            <Button variant='danger' onClick={handleCancel}>
+                                Cancel
                             </Button>
-                            <Link to='/'>
-                                <Button variant='danger' onClick={handleCancel}>
-                                    Cancel
-                                </Button>
-                            </Link>
-                        </Modal.Footer>
-                    </Modal>
-                    <div />
-                </div>
+                        </Link>
+                    </Modal.Footer>
+                </Modal>
+                <div />
+            </div>
         </div>
     );
 }
