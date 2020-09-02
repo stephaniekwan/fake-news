@@ -31,7 +31,8 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
     const [articles, setArticles] = useState(0);
     const lastLocation = useLastLocation();
 
-    if (!lastLocation || lastLocation.pathname !== "/processing") {
+    if (!lastLocation || (lastLocation.pathname !== "/processing" && 
+            lastLocation.pathname !== '/report')) {
         window.location.href = "/";
     }
 
@@ -47,6 +48,10 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
                         and thus your results may be inaccurate depending on how \
                         long ago the article was analyzed. "
     }
+
+    useEffect(() => {
+        setReanalyze(false);
+    })
     /*
     useEffect(() => {
         axios.get('/articles').then(response => {
@@ -126,19 +131,6 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
                       </button>
                   </Link>
                 </div>
-                <p>Related Low Risk Articles:</p>
-                <a href='https://google.com' target='_blank' rel='noopener noreferrer'>
-                    Related Article #1
-                </a>
-                <p>{articles[0] ? articles[0].domain : null}</p>
-                <a href='https://google.com' target='_blank' rel='noopener noreferrer'>
-                    Related Article #2
-                </a>
-                <p>{articles[0] ? articles[0].domain : null}</p>
-
-                <a href='https://google.com' target='_blank' rel='noopener noreferrer'>
-                    Related Article #3
-                </a>
             </header>
         </div>
     );

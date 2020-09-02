@@ -1,7 +1,7 @@
 // eslint-disable-next-line
-import React, {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import {Form, Button, Modal} from "react-bootstrap";
-//import { Link, userHistory } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -11,40 +11,17 @@ import styled from "styled-components";
 function Report({url}) {
     const [validated, setValidated] = useState(false);
     const [modal, setModal] = useState("hide");
+
+    // used to disable submit button after success
+    const [disabled, setDisabled] = useState(false);
+
     // eslint-disable-next-line
     const [report, setReport] = useState(null);
-    // eslint-disable-next-line
-    const [requestBody, setRequestBody] = useState({
-        /*
-        url: '',
-        user_id: '',
-        tag: '',
-        comment: ''
-        */
-    });
 
     // used to save user input from the form
-    //const [urlInput, setURL] = useState("");
-    //const [userIDInput, setUserID] = useState("");
     const [tagInput, setTag] = useState("");
     const [commentInput, setComment] = useState("");
 
-    useEffect(() => {
-        if (modal === "submitted") {
-            setModal("done");
-            axios
-                .post("/reports", {
-                    user_id: localStorage.getItem("user_id"),
-                    url: url,
-                    tag: tagInput.value,
-                    comment: commentInput.value,
-                })
-                .then((res) => {
-                    setReport(res.data);
-                });
-        }
-        setModal("done");
-    }, [modal, url, tagInput.value, commentInput.value]);
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
@@ -53,16 +30,38 @@ function Report({url}) {
             //event.preventDefault();
             //event.stopPropagation();
         } else {
+            // all fields filled out properly, submit to backend
             setModal("submitted");
+            console.log("user id: " + localStorage.getItem("user_id"));
+
+            axios.post('/reports', {
+                user_id: localStorage.getItem("user_id"),
+                url: url,
+                tag: tagInput.value,
+                comment: commentInput.value
+            })
+            .catch((err) => {
+                console.log(err)
+                setModal("failure");
+            })
+            .then((res) => {
+                console.log(res.data)
+                setReport(res.data.report);
+            })
+
+            setDisabled(true);
         }
+
         event.preventDefault();
         setValidated(true);
+        console.log(modal)
     };
 
     const handleClose = () => setModal(false);
 
-    // TODO: after submitting report, automatically return to results
-    // const handleReturn = () => setKey("app")
+    // TODO: after submitting report, add button to return to results
+    
+
 
     return (
         <ReportForm>
@@ -73,9 +72,7 @@ function Report({url}) {
                     <Form.Label className="FormLabel">URL of Article</Form.Label>
                     <Form.Control type='text' placeholder={url} readOnly rows='1' />
                 </Form.Group>
-                {
-                    // To do(Dennis): submit the user id by retrieving the user id from local storage without the user knowledge
-                }
+                
                 <Form.Group controlId='reportForm.Tag'>
                     <Form.Label className="FormLabel">Select which of the following applies:</Form.Label>
                     <Form.Control ref={(elem) => setTag(elem)} required as='select'>
@@ -94,16 +91,26 @@ function Report({url}) {
                         as='textarea'
                         rows='3'
                         placeholder='Enter any comments here'
+                        required 
                     />
                 </Form.Group>
 
                 <div style={{display: "flex", justifyContent: "space-evenly"}}>
+                    <Link to='/results'>
+                        <Button
+                            style={{backgroundColor: "gray"}}
+                            variant='dark'
+                            active
+                        >
+                            Back to Results    
+                        </Button>
+                    </Link>
+
                     <Button
                         style={{backgroundColor: "blue"}}
                         variant='dark'
                         type='submit'
-                        onClick={(e) => setModal("submit")}
-                        active
+                        disabled={disabled}
                     >
                         Submit Report
                     </Button>
@@ -120,7 +127,9 @@ function Report({url}) {
                 </Modal.Body>
 
                 <Modal.Footer>
-                    <Button onClick={handleClose}>Go back to my results</Button>
+                    <Link to='/results'>
+                        <Button onClick={handleClose}>Go back to my results</Button>
+                    </Link>
                 </Modal.Footer>
             </Modal>
 

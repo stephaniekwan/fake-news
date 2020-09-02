@@ -40,7 +40,7 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
     const [modal, setModal] = useState("hide");
     const lastLocation = useLastLocation();
 
-    if (!lastLocation || lastLocation.pathname !== "/") {
+    if ((!lastLocation || lastLocation.pathname !== "/") && !reanalyze) {
         window.location.href = "/";
     }
     // axios API for cancelling requests
@@ -58,10 +58,6 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
         if (parsedDomain !== "Empty url provided") {
             domain = parsedDomain;
         }
-        console.log("parsedDomain: " + parsedDomain);
-        console.log("domain: " + domain);
-
-        console.log("reanalyze: " + reanalyze);
 
         axios
             .get("/model", {
@@ -79,10 +75,9 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
                 }
             })
             .then((res) => {
-                if (reanalyze) {
-                    console.log("setting reanalyze = false");
-                    setReanalyze(false);
-                }
+                //if (reanalyze) {
+                //    console.log("setting reanalyze = false");
+                //}
                 console.log(res.data);
                 setArticle(res.data.article);               // dictionary
                 setLastAnalyzed(res.data.last_analyzed);    // array
@@ -118,9 +113,9 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
     const handleClose = (event) => setModal(false);
 
     // onClick={e => console.log(window.getCurrentUrl()) for get url button
+    //{!lastLocation || lastLocation.pathname !== "/" ? null : (
     return (
         <div>
-            {!lastLocation || lastLocation.pathname !== "/" ? null : (
                 <div>
                     <h2 className='Header'>Getting your results now!</h2>
                     <h4>Your URL is: {url}</h4>
@@ -160,7 +155,6 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
                     </Modal>
                     <div />
                 </div>
-            )}
         </div>
     );
 }
