@@ -29,7 +29,7 @@ def get_delay(url):
     clean_text = clean_data(text)
     pred = pipeline.predict(clean_text)
     print(pred)
-    dic = {0:'real',1:'fake'}
+    dic = {1:'real',0:'fake'}
     mResult = pred[0]
     # mResult = pred
     mAccuracy = pipeline.predict(clean_text)
