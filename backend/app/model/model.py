@@ -33,19 +33,21 @@ def get_delay(url):
     mResult = pred[0]
     # mResult = pred
     mAccuracy = pipeline.predict(clean_text)
-    if (pred[0] == 1):
-        mPerc = 0
-    elif (pred[0] == 0):
-        if(len(mAccuracy) % 2 == 0):
-            mPerc = 2
-        else:
-            mPerc = 1
-    if(mPerc == 0):
-        mString = "< 50%"
-    elif(mPerc == 1):
-        mString = "60% - 75%"
-    elif(mPerc == 2):
-        mString = "> 80%"
+    mLen = len(mAccuracy)
+    if(mLen != 0):
+        if (mResult == 1):
+            mPerc = 0
+        elif (mResult == 0):
+            if(mAccuracy[0] == 'T'):
+                mPerc = 1
+            else:
+                mPerc = 2
+        if(mPerc == 0):
+            mString = "< 50%"
+        elif(mPerc == 1):
+            mString = "60% - 75%"
+        elif(mPerc == 2):
+            mString = "> 80%"
     return { 'result': dic[pred[0]], 'range': mString}
 
 #if __name__ == '__main__':
