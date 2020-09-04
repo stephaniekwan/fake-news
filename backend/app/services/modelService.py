@@ -3,10 +3,14 @@ from datetime import datetime, timezone
 
 from app import webscraping
 from .articleService import add_article, update_article
+import zipfile
 
-#pipeline = joblib.load('..model.pipeline.sav')
-#pipeline = joblib.load('/backend/app/model/pipeline.sav')
-pipeline = joblib.load('../backend/app/model/pipeline.sav')
+# unzip pipeline
+with zipfile.ZipFile("../backend/app/services/pipeline_1.3.zip", "r") as zip_ref:
+    zip_ref.extractall()
+    
+# load model
+pipeline = joblib.load('pipeline.sav')
 
 def get_results(url):
     # define dictionary for possible values pipeline returns
@@ -14,13 +18,10 @@ def get_results(url):
 
     # clean and classify the article text
     text = webscraping.get_text(url)
-    #print("GET TEXT: ", text, "\n")
     headline = text[0]
     clean_text = webscraping.clean_data(text)
-    #print("CLEAN TEXT: ", clean_text, "\n")
-
-    #text_array[0] = clean_text
     
+    # make prediction
     pred = pipeline.predict([clean_text]) # outputs 0 or 1
     mResult = pred[0]
 
@@ -38,18 +39,7 @@ def get_results(url):
             else:
                 mPerc = 2
 
-    
-    """
-    mAccuracy = pipeline.predict([clean_text])
-    if (pred[0] == 1):
-        mPerc = 0
-    elif (pred[0] == 0):
-        if(len(mAccuracy) % 2 == 0):        #  :^)
-            mPerc = 2
-        else:
-            mPerc = 1
-    """
-    # Calculate the range.. somehow? TODO: send help KEKW
+    # Calculate the range
     if(mPerc == 0):
         mString = "< 50%"
     elif(mPerc == 1):
@@ -59,7 +49,7 @@ def get_results(url):
 
     return { 'headline': headline, 'result': dic[pred[0]], 'rating': mString}
 
-
+# add to database
 def add_db_entry(url, domain, results):
     title = results['headline']
     rating = results['rating']
@@ -99,4 +89,3 @@ def get_risk_level(rating):
     elif rating == "< 50%":
         return 2
 
-#print(get_results("https://www.cnn.com/2020/08/24/politics/vance-trump-taxes-subpoena/index.html"))

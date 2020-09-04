@@ -36,7 +36,7 @@ import "../styles/ProcessResults.css";
  *  - setReanalyze: allows ProcessResults.js to set var back to false once reanalysis done
  *  - setArticle: pass the article to parent component so Results.js can display
  */
-function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyzed, setFromDB}) {
+function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyzed, setFromDB, setRisky}) {
     const [modal, setModal] = useState("hide");
     const lastLocation = useLastLocation();
     const [goToResults, setGoToResults] = useState(false);
@@ -61,7 +61,8 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
         }
 
         axios
-            .get("/model", {
+            .get("https://sdsc-fake-news-backend.herokuapp.com/model", {
+            //.get('/model', {
                 params: {
                     url: url,
                     domain: domain,
@@ -83,6 +84,20 @@ function ProcessResults({url, reanalyze, setReanalyze, setArticle, setLastAnalyz
                 setArticle(res.data.article); // dictionary
                 setLastAnalyzed(res.data.last_analyzed); // array
                 setFromDB(res.data.pulled_from_db); // boolean
+
+                axios.get("https://sdsc-fake-news-backend.herokuapp.com/articles/domain", {
+                //axios.get('/articles/domain', {
+                    params: {
+                        domain: res.data.article.domain,
+                    },
+                })
+                .catch((err) => {
+                    console.log(err.data);
+                })
+                .then((res) => {
+                    console.log(res.data.risk);
+                    setRisky(res.data.risk);
+                })
 
                 // set constants for localstorage
                 rating = res.data.article.rating;

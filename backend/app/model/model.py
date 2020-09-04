@@ -3,8 +3,13 @@ import joblib
 from app import webscraping
 import json
 import os
+import zipfile
 
-pipeline = joblib.load('./pipeline.sav')
+#zip pipeline and unzip pipeline
+with zipfile.ZipFile("pipeline_1.3.zip", "r") as zip_ref:
+    zip_ref.extractall("./backend/app/model")
+
+pipeline = joblib.load('./pipeline_1.3.sav')
 
 #app = Flask(__name__)
 

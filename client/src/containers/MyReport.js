@@ -33,7 +33,7 @@ function MyReport({onUrlChange}) {
         let user_id = localStorage.getItem("user_id");
         let error;
         if (typeof window !== "undefined" && user_id) {
-            axios(`reports/user?user_id=${user_id}`)
+            axios(`https://sdsc-fake-news-backend.herokuapp.com/reports/user?user_id=${user_id}`)
                 .then((response) => {
                     setReports(response.data.report);
                 })
@@ -43,16 +43,6 @@ function MyReport({onUrlChange}) {
                     }
                     throw err;
                 });
-
-            /*
-            axios(`reports/${user_id}/user`)
-            .catch(err => {
-                console.log(err);
-            })
-            .then((response) => {
-                console.log(response);
-                setReports(response.data.report);
-            });*/
         }
     }, []);
 

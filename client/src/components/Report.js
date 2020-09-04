@@ -34,7 +34,7 @@ function Report({url}) {
             setModal("submitted");
             console.log("user id: " + localStorage.getItem("user_id"));
 
-            axios.post('/reports', {
+            axios.post('https://sdsc-fake-news-backend.herokuapp.com/reports', {
                 user_id: localStorage.getItem("user_id"),
                 url: url,
                 tag: tagInput.value,

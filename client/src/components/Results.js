@@ -1,7 +1,8 @@
-import React, {useState, useEffect, useCallback} from "react";
+import React, {useEffect, useCallback} from "react";
 import {Link} from "react-router-dom";
 import {useLastLocation} from "react-router-last-location";
 import "../styles/Results.css";
+
 
 /*
  * Params:
@@ -27,8 +28,8 @@ import "../styles/Results.css";
  *      }
  *
  */
-function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
-    const [articles, setArticles] = useState(0);
+function Results({setReanalyze, article, lastAnalyzed, fromDB, risky}) {
+    //const [articles, setArticles] = useState(0);
     const lastLocation = useLastLocation();
 
     if (!lastLocation || (lastLocation.pathname !== "/processing" &&
@@ -92,7 +93,15 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
         color = "red";
     }
 
-    // if user wants to reanalyze, change state of parent component to reflect that
+    // set up info to display if domain is risky
+    var domainNews;
+    console.log(risky)
+    if(risky === "risky") {
+        domainNews = "fake";
+    } else if(risky === "safe") {
+        domainNews = "factual";
+    }
+
     const handleClick = useCallback(
         (event) => {
             console.log("setting reanalyze = true");
@@ -117,6 +126,9 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB}) {
                 <p className='body'>
                     Your article was last analyzed {days} days, {hours} hours, {mins} minutes,
                     and {secs} seconds ago.
+                </p>
+                <p className='body'>
+                    This domain has been flagged as {risky} due to its history of {domainNews} news
                 </p>
                 <p className='body'>Disagree with your results?</p>
                 <div className="buttons">

@@ -23,6 +23,7 @@ const Router = () => {
     const [article, setArticle] = useState(null);
     const [lastAnalyzed, setLastAnalyzed] = useState(null);
     const [fromDB, setFromDB] = useState(false);
+    const [risky, setRisky] = useState("risky");
 
     /*
     useEffect(() => {
@@ -64,6 +65,7 @@ const Router = () => {
                                     setArticle={setArticle}
                                     setLastAnalyzed={setLastAnalyzed}
                                     setFromDB={setFromDB}
+                                    setRisky={setRisky}
                                 />
                             )}
                         />
@@ -81,6 +83,7 @@ const Router = () => {
                                     article={article}
                                     lastAnalyzed={lastAnalyzed}
                                     fromDB={fromDB}
+                                    risky={risky}
                                 />
                             )}
                         />
