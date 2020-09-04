@@ -9,19 +9,22 @@ const RenderReports = ({isOrdered, reports}) => {
     if (!reports) return null;
     if (reports.length === 0) return <div>Reports not found.</div>;
 
-    const list = reports.map((report, i) => (
-        <Card key={`${i}_${report.user_id}`}>
-            <CardRow>
-                <p>comment</p>
-                <span>{report.comment}</span>
-                <p>tag</p>
-                <span>{report.tag}</span>
+    const list = reports
+        .map((report, i) => (
+            <Card key={`${i}_${report.user_id}`}>
+                <CardRow>
+                    <p>comment</p>
+                    <span>{report.comment}</span>
+                    <p>tag</p>
+                    <span>{report.tag}</span>
 
-                <p>url</p>
-                <span>{report.url}</span>
-            </CardRow>
-        </Card>
-    ));
+                    <p>url</p>
+                    <span>{report.url}</span>
+                </CardRow>
+            </Card>
+        ))
+        .sort((a, b) => (a > b ? -1 : 1)); // Sorted the reports to display recent reports first.
+
     return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
 };
 

@@ -116,13 +116,16 @@ function ProcessResults({
                 // Add article to local storage
                 if (typeof window !== "undefined") {
                     let storedArticles = localStorage.getObj("articles") || [];
-                    storedArticles.push({
+
+                    // Display recent articles first.
+                    storedArticles.unshift({
                         url,
                         domain,
                         rating,
                         riskLevel,
                         date,
                     });
+
                     localStorage.setObj("articles", storedArticles);
                 }
                 setGoToResults(true);
