@@ -5,15 +5,41 @@ import '../styles/FAQPage.css';
 function FAQPage() {
     return (
         <>
-            <h1>faq page</h1>
+            <div className="FAQHeader">
+              <h4>Frequently Asked Questions</h4>
+            </div>
             <Collapsible trigger="What do my results mean?">
-                <p> The percentage displayed... </p>
+                <p> After analyzing your article, you will receive a percentage
+                     range. Depending on the range, your article will be classified
+                     as fact or fake. The higher the percentage, the more factual your
+                     article is. A percentage greater ({'>'}) than 80% is mostly factual. 
+                     A percentage below ({'<'}) 50% is mostly fake. In between these ranges 
+                     varies. There is a risk that your article has both fake and 
+                     factual news.
+                </p>
             </Collapsible>
             <Collapsible trigger="How does it work?">
-                <p> Our machine learning model uses a neural network ... and is trained on data from ... </p>
+                <p> First, you copy paste the link of the article you want analyzed 
+                    into the url box. After clicking Analyze Article, you will see 
+                    your results of fake or fact in a form of a percentage range. 
+                    You also have the option to report your results if you do not 
+                    agree with the prediction given. You also can reanalyze the 
+                    article if your article has been analyzed already.
+                </p>
             </Collapsible>
             <Collapsible trigger="How can we trust the results?">
-                <p> You can always trust stonks guy (but never trust stinks guy)</p>
+                <p> Fake and factual news are classified through a machine learning 
+                    model. Keywords, context, and statistical analysis are used in a 
+                    linear regression model to accurately predict fake and fact. Our 
+                    model takes keywords and associates their context with fake and 
+                    fact and gives a prediction. Through the use of statistical 
+                    analysis and vectorizers, an article is broken down to its most 
+                    important words and associated with fake or fact. The model has 
+                    been trained over multiple datasets from 2016-2019 and has achieved 
+                    over 95% accuracy. While our model has a high percentage accuracy, 
+                    the result is still a prediction. It may not always be correct and 
+                    should be taken with a grain of salt.
+                </p>
             </Collapsible>
             <Collapsible trigger="Whomstd is u?">
                 <p> S T O N K S (when everyone only knows stonks guy but not surreal meme man pepehands)</p>

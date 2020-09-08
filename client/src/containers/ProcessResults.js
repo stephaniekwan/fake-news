@@ -1,15 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'
-import axios from 'axios';
-import ParseDomain from '../utils/ParseDomain';
-import ParseTitle from '../utils/ParseTitle';
-import '../styles/ProcessResults.css';
+import React, {useState} from "react";
+import {useLastLocation} from "react-router-last-location";
+import {Modal, Button} from "react-bootstrap";
+import {Link, Redirect} from "react-router-dom";
+import axios from "axios";
+import ParseDomain from "../utils/ParseDomain";
+import "../styles/ProcessResults.css";
 //import getTitleAtUrl from 'get-title-at-url';
 //var getTitleAtUrl = require('get-title-at-url');
 //import * as chrome from "sinon-chrome"
 //import extract from 'article-parser';
-
 
 // TODO IN THIS FILE
 /*
@@ -37,214 +36,165 @@ import '../styles/ProcessResults.css';
  *  - setReanalyze: allows ProcessResults.js to set var back to false once reanalysis done
  *  - setArticle: pass the article to parent component so Results.js can display
  */
-function ProcessResults( {url, reanalyze, setReanalyze, setArticle} ) {
-    const [modal, setModal] = useState('hide');
+function ProcessResults({
+    url,
+    reanalyze,
+    setReanalyze,
+    setArticle,
+    setLastAnalyzed,
+    setFromDB,
+    setRisky,
+}) {
+    const [modal, setModal] = useState("hide");
+    const lastLocation = useLastLocation();
+    const [goToResults, setGoToResults] = useState(false);
 
+    if ((!lastLocation || lastLocation.pathname !== "/") && !reanalyze) {
+        window.location.href = "/";
+    }
     // axios API for cancelling requests
     const CancelToken = axios.CancelToken;
-    const source = CancelToken.source()
+    const source = CancelToken.source();
 
     // used to save other values needed for POST request to db
     var domain = "";
-    var title = "placeholder";
     var rating = "";
     var riskLevel = 0;
-    var timestamp = null;
     var date = new Date();
 
-    /*
-    useEffect(() => {
-        // https://www.npmjs.com/package/article-title  || dunno if this will work for title
-        // https://www.npmjs.com/package/article-parser || wait this one is op....
-    }, [domain, title, url, date]);
-    */
-
-    //url = "https://www.nbcnews.com/news/amp/ncna1236249";
-
-    const onClick = event => {
-
+    const onClick = (event) => {
         var parsedDomain = ParseDomain(url);
         if (parsedDomain !== "Empty url provided") {
             domain = parsedDomain;
         }
-        console.log("parsedDomain: " + parsedDomain);
-        console.log("domain: " + domain);
 
-        /*
-        var parsedTitle = ParseTitle(url);
-        if (parsedTitle !== "Empty url provided") {
-            title = parsedTitle;
-        }
-        //why the fuck do you not EXIST REEEEEEEEEEEEEEEEE
-        //; -; ill cry
-        console.log("parsedTitle: "+ parsedTitle);
-        console.log("title: " + title);*/
-
-        console.log("reanalyze: " + reanalyze);
-
-        if (reanalyze) {
-            // reanalyze == true, set back to false
-            // call model no matter what
-            console.log("setting reanalyze = false")
-            setReanalyze(false);
-            /*axios.post(route, {
-                risk_level
-            })*/
-
-        } else {
-            // try to get article from db
-            axios.get('/articles/article', {
+        axios
+            .get("https://sdsc-fake-news-backend.herokuapp.com/model", {
+                //.get('/model', {
                 params: {
-                    url: url
-                }, 
-                cancelToken: source.token
-            }).catch(err => {
+                    url: url,
+                    domain: domain,
+                    reanalyze: reanalyze,
+                },
+                cancelToken: source.token,
+            })
+            .catch((err) => {
                 // User wishes to cancel
                 if (axios.isCancel(err)) {
-                    console.log('Request canceled', err.message);
+                    console.log("Request canceled", err.message);
                 }
-                // error uncaught by the article router
-                if(err.response) {
-                    console.log(err.response);        // body of error
-                    console.log(err.response.status); // error number
-                }
-            }).then(res => {
-                console.log(res.data)
-                // check for error returned by article router
-                //console.log(res.data);
-                if(res.data.error === null) {
-                    // no error; article successfully found
-                    console.log("article: " + res.data.article);
-                    setArticle(res.data.article); // dictionary
-                    //notFound = false;
-
-                } else if (res.data.error.status === 404) {
-                    // article not found in db, make new article
-
-                    // pass url to model for analysis
-                    axios.get('/model', {
-                        params: {
-                            url: url
-                        }, 
-                        cancelToken: source.token
-
-                    // handle promise from GET request to model
-                    }).catch(err => {
-                        // User wishes to cancel
-                        if (axios.isCancel(err)) {
-                            console.log('Request canceled', err.message);
-                        }
-                    }).then(res => {
-                        // model returns dictionary with keys [results, range]
-                        var mResults = res.data.results;
-                        
-                        rating = mResults.range;
-
-                        // define risk level using range
-                        if (rating === "< 50%") {
-                            riskLevel = 2;
-                        } else if (rating === "60% - 75%") {
-                            riskLevel = 1;
-                        } else {
-                            riskLevel = 0;
-                        }
-
-                        timestamp = date.toUTCString();
-                        // post request to /articles
-                        axios.post('/articles', {
-                            url: url,
-                            domain: domain,
-                            title: title,
-                            rating: rating,
-                            reports: [],
-                            risk_level: riskLevel,
-                            timestamp: timestamp
-                        }, {
-                            cancelToken: source.token
-
-                        // handle promise from POST request to /articles
-                        }).catch(err => {
-                            // User wishes to cancel
-                            if (axios.isCancel(err)) {
-                                console.log('Request canceled', err.message);
-                            }
-                        }).then(res => {
-                            setArticle(res.data.article);
-                            console.log(res.data.article);
-                        });
-                    });
-                }
-            });
-        }
-
-        // Add article to local storage
-        if (
-            typeof window !== "undefined"
-        ) {
-            let storedArticles = localStorage.getObj("articles")|| [];
-            storedArticles.push({
-                url,
-                domain,
-                rating,
-                riskLevel,
-                date
             })
-            localStorage.setObj('articles', storedArticles);
-        }
-    }
+            .then((res) => {
+                //if (reanalyze) {
+                //    console.log("setting reanalyze = false");
+                //}
+                console.log(res.data);
+                setArticle(res.data.article); // dictionary
+                setLastAnalyzed(res.data.last_analyzed); // array
+                setFromDB(res.data.pulled_from_db); // boolean
+
+                axios
+                    .get("https://sdsc-fake-news-backend.herokuapp.com/articles/domain", {
+                        //axios.get('/articles/domain', {
+                        params: {
+                            domain: res.data.article.domain,
+                        },
+                    })
+                    .catch((err) => {
+                        console.log(err.data);
+                    })
+                    .then((res) => {
+                        console.log(res.data.risk);
+                        setRisky(res.data.risk);
+                    });
+
+                // set constants for localstorage
+                rating = res.data.article.rating;
+                riskLevel = res.data.article.risk_level;
+                date = date.toUTCString();
+
+                // Add article to local storage
+                if (typeof window !== "undefined") {
+                    let storedArticles = localStorage.getObj("articles") || [];
+
+                    // Display recent articles first.
+                    storedArticles.unshift({
+                        url,
+                        domain,
+                        rating,
+                        riskLevel,
+                        date,
+                    });
+
+                    localStorage.setObj("articles", storedArticles);
+                }
+                setGoToResults(true);
+            });
+    };
 
     // on click function to cancel the request for analysis
-    const handleCancel = event => {
-        source.cancel('Operation canceled by user.');
+    const handleCancel = (event) => {
+        source.cancel("Operation canceled by user.");
         setModal(false);
-    }
+    };
 
-    const handleClick = event => setModal('show');
-    const handleClose = event => setModal(false);
+    const handleClick = (event) => setModal("show");
+    const handleClose = (event) => setModal(false);
 
     // onClick={e => console.log(window.getCurrentUrl()) for get url button
+    //{!lastLocation || lastLocation.pathname !== "/" ? null : (
     return (
         <div>
-            <h2 className='Header'>Getting your results now!</h2>
-            <h4>Your URL is: {url}</h4>
+            {goToResults ? <Redirect to='/results' /> : null}
+            <div>
+                <h2 className='Header'>Getting your results now!</h2>
+                <h4>Your URL is: {url}</h4>
+                {/* Remove this to simplify the processing page and avoid potential confusions */}
+                {/* <button onClick={onClick}>Parse</button> */}
 
-            <button onClick={onClick}>Parse</button>
+                <hr />
 
-            <hr />
+                <button className='CancelButton' onClick={handleClick}>
+                    Cancel
+                </button>
 
-            <button className='CancelButton' onClick={handleClick}>Cancel</button>
+                <button className='ResultsButton' onClick={onClick}>
+                    Proceed to results
+                </button>
 
-            <Link to='/results'>
-                <button className='ResultsButton'>Proceed to results</button>
-            </Link>
+                <Modal show={modal === "show"} onHide={handleClose} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirm Cancellation</Modal.Title>
+                    </Modal.Header>
 
-            <Modal show={modal === 'show'} onHide={handleClose} centered>
-                <Modal.Header closeButton>
-                    <Modal.Title>Confirm Cancellation</Modal.Title>
-                </Modal.Header>
+                    <Modal.Body>
+                        <p>URL: {url}</p>
+                        <p>Are you sure you want to cancel the analysis?</p>
+                    </Modal.Body>
 
-                <Modal.Body>
-                    <p>URL: {url}</p>
-                    <p>Are you sure you want to cancel the analysis?</p>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant='outline-secondary' onClick={handleClose}>Close</Button>
-                    <Link to='/'>
-                        <Button variant='danger' onClick={handleCancel}>Cancel</Button>
-                    </Link>
-                </Modal.Footer>
-            </Modal>
+                    <Modal.Footer>
+                        <Button variant='outline-secondary' onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Link to='/'>
+                            <Button variant='danger' onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                        </Link>
+                    </Modal.Footer>
+                </Modal>
+                <div />
+            </div>
         </div>
-    )
+    );
 }
 
 // Override default storage methods: setItem(), getItem
-Storage.prototype.setObj = function(key, obj) {
-    return this.setItem(key, JSON.stringify(obj))
-}
-Storage.prototype.getObj = function(key) {
-    return JSON.parse(this.getItem(key))
-}
+Storage.prototype.setObj = function (key, obj) {
+    return this.setItem(key, JSON.stringify(obj));
+};
+Storage.prototype.getObj = function (key) {
+    return JSON.parse(this.getItem(key));
+};
 
-export default ProcessResults
+export default ProcessResults;

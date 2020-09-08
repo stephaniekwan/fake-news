@@ -22,12 +22,13 @@ def get_text(url):
     headline = news_article.title
     text = news_article.text
 
-    result = headline + text
+    result = [headline, text]
     # if you want to  return a list
     return result
 
 # to clean the text
 def clean_data(article):
+    article = article[0] + article[1]
     lemmatizer = WordNetLemmatizer()
     article = article.replace('\n', ' ')
     #article = article.replace('\n\n', ' ')

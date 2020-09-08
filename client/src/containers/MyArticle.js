@@ -6,30 +6,43 @@ import styled from "styled-components";
 
 const RenderArticles = ({isOrdered, articles}) => {
     if (!articles) return null;
+    if (articles.length === 0) return <div>Articles not found.</div>;
 
-    const list = articles.map((article, i) => (
-        <Card key={i}>
-            <CardRow>
-                <p>Domain</p>
-                <span>{article.domain}</span>
-                <p>Rating</p>
-                <span>{article.rating}</span>
+    const list = articles.map((article, i) => {
+        const articleDate = new Date(article.date);
+        const dateTimeFormat = new Intl.DateTimeFormat("en", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+        });
+        const [{value: month}, , {value: day}, , {value: year}] = dateTimeFormat.formatToParts(
+            articleDate
+        );
 
-                <p>Url</p>
-                <span>{article.url}</span>
+        return (
+            <Card key={i}>
+                <CardRow>
+                    <p>Domain</p>
+                    <span>{article.domain}</span>
+                    <p>Rating</p>
+                    <span>{article.rating}</span>
 
-                <p>Risk Level</p>
-                <span>{article.riskLevel}</span>
+                    <p>Url</p>
+                    <span>{article.url}</span>
 
-                <p>Date</p>
-                <span>{article.date}</span>
-            </CardRow>
-        </Card>
-    ));
+                    <p>Risk Level</p>
+                    <span>{article.riskLevel}</span>
+
+                    <p>Date</p>
+                    <span>{`${day}-${month}-${year}`}</span>
+                </CardRow>
+            </Card>
+        );
+    });
     return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
 };
 
-function PromptPage({onUrlChange}) {
+function MyArticle({onUrlChange}) {
     // eslint-disable-next-line
     const [articles, setArticles] = useState([]);
 
@@ -92,4 +105,4 @@ const HomeButtonWrapper = styled.div`
 const HomeButton = styled.input`
     width: 3rem;
 `;
-export default PromptPage;
+export default MyArticle;

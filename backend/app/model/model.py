@@ -3,8 +3,13 @@ import joblib
 from app import webscraping
 import json
 import os
+import zipfile
 
-pipeline = joblib.load('./pipeline.sav')
+#zip pipeline and unzip pipeline
+with zipfile.ZipFile("pipeline_1.3.zip", "r") as zip_ref:
+    zip_ref.extractall("./backend/app/model")
+
+pipeline = joblib.load('./pipeline_1.3.sav')
 
 #app = Flask(__name__)
 
@@ -29,23 +34,25 @@ def get_delay(url):
     clean_text = clean_data(text)
     pred = pipeline.predict(clean_text)
     print(pred)
-    dic = {0:'real',1:'fake'}
+    dic = {1:'real',0:'fake'}
     mResult = pred[0]
     # mResult = pred
     mAccuracy = pipeline.predict(clean_text)
-    if (pred[0] == 1):
-        mPerc = 0
-    elif (pred[0] == 0):
-        if(len(mAccuracy) % 2 == 0):
-            mPerc = 2
-        else:
-            mPerc = 1
-    if(mPerc == 0):
-        mString = "< 50%"
-    elif(mPerc == 1):
-        mString = "60% - 75%"
-    elif(mPerc == 2):
-        mString = "> 80%"
+    mLen = len(mAccuracy)
+    if(mLen != 0):
+        if (mResult == 1):
+            mPerc = 0
+        elif (mResult == 0):
+            if(mAccuracy[0] == 'T'):
+                mPerc = 1
+            else:
+                mPerc = 2
+        if(mPerc == 0):
+            mString = "< 50%"
+        elif(mPerc == 1):
+            mString = "60% - 75%"
+        elif(mPerc == 2):
+            mString = "> 80%"
     return { 'result': dic[pred[0]], 'range': mString}
 
 #if __name__ == '__main__':

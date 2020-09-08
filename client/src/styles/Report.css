@@ -1,3 +1,11 @@
 .ReportForm {
     text-align: left;
 }
+
+.ReportHeader {
+    text-align: center;
+}
+
+.FormLabel {
+    padding-left: 10px;
+}

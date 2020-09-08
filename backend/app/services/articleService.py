@@ -4,46 +4,45 @@ from ..database import db
 
 articles_ref =  db.collection('articles')
 
+'''
+Gets all articles from the database
+@return all Analyzed_Article instances
+'''
 def get_all_articles():
-    '''
-    Gets all articles from the database
-    @return all Analyzed_Article instances
-    '''
     articles = [doc.to_dict() for doc in articles_ref.stream()]
     return articles
 
+'''
+Add an article to the database if it doesn't already exist.
+If it already exists, do not overwrite (keep old data)
+@return info that the article already exists; else return the article
+'''
 def add_article(article):
-    '''
-    Add an article to the database if it doesn't already exist.
-    If it already exists, do not overwrite (keep old data)
-    @return info that the article already exists; else return the article
-    '''
     existing = get_article(article['url'])
 
     # if it already exists, keep the old entry
     if existing != 'No such article':
         return "Article already exists in database!"
 
-
     articles_ref.add(article)
 
     return article
 
+'''
+Gets a particular article from the database
+@param article -- the article to query for
+@return an Analyzed_Article instance if the article is in db, else error
+'''
 def get_article(article_url):
-
-    '''
-    Gets a particular article from the database
-    @param article -- the article to query for
-    @return an Analyzed_Article instance if the article is in db, else error
-    '''
 
     # Get a single article from database that matches the article_url
     doc_ref_gen = articles_ref.where(u'url', u'==', article_url).limit(1).stream()
-    #print("before", type(doc_ref))
+    #print("before", type(doc_ref_gen))
 
     #Get the document snapshot of the doc_ref_gen generator
     doc_ref = next(doc_ref_gen, None)
     #print("after", type(doc_ref))
+    #print(type(doc_ref.reference))
 
     # document referenced does not exist
     if not doc_ref:
@@ -52,22 +51,75 @@ def get_article(article_url):
     # Get the data in the document by accessing it using its reference
     doc = doc_ref.reference.get()
 
-    print(f'Document data: {doc.to_dict()}')
+    #print(f'Document data: {doc.to_dict()}')
 
     return doc.to_dict()
 
-def update_article(article_url, article):
-    '''TODO: QUESTION-do we want to clear all reports for the article?
-    TODO: QUESTION-should we just update the risk_level?
-    For when user wants to reanalyze an article, thus giving it a
-    new rating, risk_level, timestamp, and refreshing reports
-    '''
+'''
+For when user wants to reanalyze an article, thus giving it a
+new rating, risk_level, and timestamp
+@param article_url -- the url to query for
+@param risk_level -- the new risk level of the article (int)
+@param rating -- the new rating of the article (range of percentages)
+@param timestamp -- the time of the new analysis
+@return updated Analyzed_Article instance in dictionary form
+'''
+def update_article(article_url, rating, risk_level, timestamp):
+    #TODO: QUESTION-do we want to clear all reports for the article?
+    
     existing = get_article(article_url)
+    print(existing)
 
-    # if article already exists, delete it
-    # if len(existing) != 0 and article['risk_level']:
-    # existing.set({ 'risk_level': article['risk_level'] })
+    if(existing == 'No such article'):
+        return 'No such article'
 
-    # To do (dennis): We need to update this method after figuring out fields that need to be updated.
+    # Get a single article from database that matches the article_url
+    doc_ref_gen = articles_ref.where(u'url', u'==', article_url).limit(1).stream()
 
-    return existing
+    #Get the document reference from the iterator
+    doc_ref = next(doc_ref_gen, None)
+    doc_ref = doc_ref.reference
+
+    doc_ref.update({
+        'risk_level' : risk_level,
+        'rating' : rating,
+        'timestamp' : timestamp
+    })
+
+    doc = doc_ref.get()
+
+    return doc.to_dict()
+
+'''
+This function is used for checking how many articles are from the same domain that
+are predicted to be <80% true
+@param domain -- the domain to query for
+@return 'risky' if there are at least 3 risky documents from the same domain
+        else 'safe'
+'''
+def check_domain(domain):
+    # for testing: www.cnn.com has 3 risky articles
+    # query db
+    docs = articles_ref.where('domain', '==', domain).stream()
+
+    # list for storing the dictionary form of all the documents
+    docsList = []
+
+    # counter for how many total documents were found in the query
+    numDocs = 0
+
+    for doc in docs:
+        numDocs += 1
+        doc = doc.to_dict()
+        # if rating is < 80%, we will count as risky
+        if doc['rating'] != '> 80%':
+            docsList.append(doc)
+            #print(doc)
+
+    if numDocs == 0:
+        return 'Domain not found'
+    elif len(docsList) >= 3:
+        return 'risky'
+    else:
+        return 'safe'
+

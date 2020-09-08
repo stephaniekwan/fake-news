@@ -7,34 +7,45 @@ import styled from "styled-components";
 
 const RenderReports = ({isOrdered, reports}) => {
     if (!reports) return null;
+    if (reports.length === 0) return <div>Reports not found.</div>;
 
-    const list = reports.map((report, i) => (
-        <Card key={`${i}_${report.user_id}`}>
-            <CardRow>
-                <p>comment</p>
-                <span>{report.comment}</span>
-                <p>tag</p>
-                <span>{report.tag}</span>
+    const list = reports
+        .map((report, i) => (
+            <Card key={`${i}_${report.user_id}`}>
+                <CardRow>
+                    <p>comment</p>
+                    <span>{report.comment}</span>
+                    <p>tag</p>
+                    <span>{report.tag}</span>
 
-                <p>url</p>
-                <span>{report.url}</span>
-            </CardRow>
-        </Card>
-    ));
+                    <p>url</p>
+                    <span>{report.url}</span>
+                </CardRow>
+            </Card>
+        ))
+        .sort((a, b) => (a > b ? -1 : 1)); // Sorted the reports to display recent reports first.
+
     return isOrdered ? <ol>{list}</ol> : <ul>{list}</ul>;
 };
 
-function PromptPage({onUrlChange}) {
+function MyReport({onUrlChange}) {
     // eslint-disable-next-line
     const [reports, setReports] = useState([]);
 
     useEffect(() => {
-        let user_id = "2";
+        let user_id = localStorage.getItem("user_id");
+        let error;
         if (typeof window !== "undefined" && user_id) {
-            axios(`reports/${user_id}/user`).then((response) => {
-                console.log(response);
-                setReports(response.data.report);
-            });
+            axios(`https://sdsc-fake-news-backend.herokuapp.com/reports/user?user_id=${user_id}`)
+                .then((response) => {
+                    setReports(response.data.report);
+                })
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        console.error(`${err.response.config.url} not found`);
+                    }
+                    throw err;
+                });
         }
     }, []);
 
@@ -93,4 +104,4 @@ const HomeButton = styled.input`
     width: 3rem;
 `;
 
-export default PromptPage;
+export default MyReport;

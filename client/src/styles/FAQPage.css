@@ -1,11 +1,25 @@
 .Collapsible__trigger {
     display: block;
-    background-color: #7797c9;
     color: white;
     position: relative;
+    border: 1px solid white;
     padding: 10px;
+    padding-left: 15px;
+    background: #7797c9;
+    color: white;
+    text-align: left;
 }
 
 .Collapsible__contentInner {
-    padding: 10px;
+    padding-top: 15px;
+    padding-left: 15px;
+    text-align: left;
+}
+
+.FAQHeader {
+    font-family: 'Apple Chancery';
+    font-size: 25px;
+    text-align: center;
+    color: #1F4681;
+    padding-top: 10px;
 }
