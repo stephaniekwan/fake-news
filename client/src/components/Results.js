@@ -128,7 +128,7 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB, risky}) {
                     and {secs} seconds ago.
                 </p>
                 <p className='body'>
-                    This domain has been flagged as {risky} due to its history of {domainNews} news
+                    This domain has been flagged as {risky} due to its history of {domainNews} news.
                 </p>
                 <p className='body'>Disagree with your results?</p>
                 <div className="buttons">

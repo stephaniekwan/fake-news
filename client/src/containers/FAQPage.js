@@ -41,11 +41,9 @@ function FAQPage() {
                     should be taken with a grain of salt.
                 </p>
             </Collapsible>
-            <Collapsible trigger="Whomstd is u?">
-                <p> S T O N K S (when everyone only knows stonks guy but not surreal meme man pepehands)</p>
-            </Collapsible>
-            <Collapsible trigger="Where can I learn more about the product?">
-                <p> S T O N K S link </p>
+            <Collapsible trigger="Where can I learn more about the product and the team?">
+                <p><a href={"https://sdsc-ucsd.atlassian.net/wiki/spaces/SRSI2/pages/940736638/Team+S+T+O+N+K+S"}>Click here to visit our website!</a></p>
+                <p>If the link above does not work, please use this one: https://sdsc-ucsd.atlassian.net/wiki/spaces/SRSI2/pages/940736638/Team+S+T+O+N+K+S</p>
             </Collapsible>
         </>
     )
