@@ -37,17 +37,26 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB, risky}) {
         window.location.href = "/";
     }
 
-    const days = lastAnalyzed[0];
-    const hours = lastAnalyzed[1];
-    const mins = lastAnalyzed[2];
-    const secs = lastAnalyzed[3];
-
-    // set up message to display if the article was pulled from the database
+    // set up messages to display if the article was pulled from the database
     var fromDatabase = "";
+    var timeSinceAnalysis = "";
     if (fromDB) {
         fromDatabase = "The results for this article were pulled from our database \
                         and thus your results may be inaccurate depending on how \
                         long ago the article was analyzed. "
+    }
+    
+    // display message if article was not analyzed just now
+    const days = lastAnalyzed[0];
+    const hours = lastAnalyzed[1];
+    const mins = lastAnalyzed[2];
+    const secs = lastAnalyzed[3];
+    // check if lastAnalyzed !== [0, 0, 0, 0]
+    if (!(days === 0 && hours === 0 && mins === 0 && secs === 0)) {
+        timeSinceAnalysis = "Your article was last analyzed " + days + " days, " +
+            hours + " hours, and " + mins + " minutes ago."
+    }  else {
+        timeSinceAnalysis = "Your article was last analyzed just now."
     }
 
     useEffect(() => {
@@ -124,11 +133,10 @@ function Results({setReanalyze, article, lastAnalyzed, fromDB, risky}) {
                     {fromDatabase}
                 </p>
                 <p className='body'>
-                    Your article was last analyzed {days} days, {hours} hours, {mins} minutes,
-                    and {secs} seconds ago.
+                    {timeSinceAnalysis}
                 </p>
                 <p className='body'>
-                    This domain has been flagged as {risky} due to its history of {domainNews} news.
+                    This domain has been flagged as {risky} due to its history of {domainNews} news with our machine learning model.
                 </p>
                 <p className='body'>Disagree with your results?</p>
                 <div className="buttons">

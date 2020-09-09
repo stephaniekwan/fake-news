@@ -149,8 +149,9 @@ function ProcessResults({
             <div>
                 <h2 className='Header'>Getting your results now!</h2>
                 <h4>Your URL is: {url}</h4>
-                {/* Remove this to simplify the processing page and avoid potential confusions */}
-                {/* <button onClick={onClick}>Parse</button> */}
+
+                <p>Please allow some time for the model to perform its analysis on the article
+                    after you have pressed the "Proceed to Results" button</p>
 
                 <hr />
 
@@ -159,7 +160,7 @@ function ProcessResults({
                 </button>
 
                 <button className='ResultsButton' onClick={onClick}>
-                    Proceed to results
+                    Proceed to Results
                 </button>
 
                 <Modal show={modal === "show"} onHide={handleClose} centered>
