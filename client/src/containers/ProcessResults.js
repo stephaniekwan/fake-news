@@ -82,53 +82,59 @@ function ProcessResults({
                 // User wishes to cancel
                 if (axios.isCancel(err)) {
                     console.log("Request canceled", err.message);
+                } else if (err.status !== 200) {
+                    // error from the backend
+                    console.log("Error: ", err.message);
+                    setModal("error");
                 }
             })
             .then((res) => {
-                //if (reanalyze) {
-                //    console.log("setting reanalyze = false");
-                //}
-                console.log(res.data);
-                setArticle(res.data.article); // dictionary
-                setLastAnalyzed(res.data.last_analyzed); // array
-                setFromDB(res.data.pulled_from_db); // boolean
+                if (typeof(res) !== "undefined") {
+                    //if (reanalyze) {
+                    //    console.log("setting reanalyze = false");
+                    //}
+                    console.log(res.data);
+                    setArticle(res.data.article); // dictionary
+                    setLastAnalyzed(res.data.last_analyzed); // array
+                    setFromDB(res.data.pulled_from_db); // boolean
 
-                axios
-                    .get("https://sdsc-fake-news-backend.herokuapp.com/articles/domain", {
-                        //axios.get('/articles/domain', {
-                        params: {
-                            domain: res.data.article.domain,
-                        },
-                    })
-                    .catch((err) => {
-                        console.log(err.data);
-                    })
-                    .then((res) => {
-                        console.log(res.data.risk);
-                        setRisky(res.data.risk);
-                    });
+                    axios
+                        .get("https://sdsc-fake-news-backend.herokuapp.com/articles/domain", {
+                            //axios.get('/articles/domain', {
+                            params: {
+                                domain: res.data.article.domain,
+                            },
+                        })
+                        .catch((err) => {
+                            console.log(err.data);
+                        })
+                        .then((res) => {
+                            console.log(res.data.risk);
+                            setRisky(res.data.risk);
+                        });
 
-                // set constants for localstorage
-                rating = res.data.article.rating;
-                riskLevel = res.data.article.risk_level;
-                date = date.toUTCString();
+                    // set constants for localstorage
+                    rating = res.data.article.rating;
+                    riskLevel = res.data.article.risk_level;
+                    date = date.toUTCString();
 
-                // Add article to local storage
-                if (typeof window !== "undefined") {
-                    let storedArticles = localStorage.getObj("articles") || [];
+                    // Add article to local storage
+                    if (typeof window !== "undefined") {
+                        let storedArticles = localStorage.getObj("articles") || [];
 
-                    // Display recent articles first.
-                    storedArticles.unshift({
-                        url,
-                        domain,
-                        rating,
-                        riskLevel,
-                        date,
-                    });
+                        // Display recent articles first.
+                        storedArticles.unshift({
+                            url,
+                            domain,
+                            rating,
+                            riskLevel,
+                            date,
+                        });
 
-                    localStorage.setObj("articles", storedArticles);
+                        localStorage.setObj("articles", storedArticles);
+                    }
+                    setGoToResults(true);
                 }
-                setGoToResults(true);
             });
     };
 
@@ -184,7 +190,28 @@ function ProcessResults({
                         </Link>
                     </Modal.Footer>
                 </Modal>
-                <div />
+
+                <Modal show={modal === "error"} onHide={handleClose} centered>
+                    <Modal.Header>
+                        <Modal.Title>Oops! An error has occurred.</Modal.Title>
+                    </Modal.Header>
+
+                    <Modal.Body>
+                        <p>
+                            An error has occurred while getting your results.
+                            Please try again, or cancel this operation to predict on
+                            another article.
+                        </p>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant='danger' onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+
+                </Modal>
+                
             </div>
         </div>
     );

@@ -59,10 +59,6 @@ function Report({url}) {
 
     const handleClose = () => setModal(false);
 
-    // TODO: after submitting report, add button to return to results
-    
-
-
     return (
         <ReportForm>
             <h1 className="ReportHeader">Report an Error</h1>
