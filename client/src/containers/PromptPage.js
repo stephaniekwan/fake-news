@@ -22,7 +22,9 @@ function PromptPage({onUrlChange}) {
     };*/
 
     const handleChange = (event) => {
-        setUrlInput(event.target.value);
+        var url = event.target.value;
+        url = url.trim()
+        setUrlInput(url);
     };
 
     const handleClick = useCallback(
